@@ -5,6 +5,7 @@ namespace Oneup\AclBundle\Security\Acl\Manager;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
@@ -36,14 +37,67 @@ class AclManager implements AclManagerInterface
         $this->addPermission($object, $identity, $mask, 'object');
     }
 
+    public function revokeObjectPermission($object, $identity, $mask)
+    {
+        $this->revokePermission($object, $identity, $mask, 'object');
+    }
+
     public function addClassPermission($object, $identity, $mask)
     {
         $this->addPermission($object, $identity, $mask, 'class');
     }
 
+    public function revokeClassPermission($object, $identity, $mask)
+    {
+        $this->revokePermission($object, $identity, $mask, 'class');
+    }
+
     public function isGranted($attributes, $object = null)
     {
         return $this->context->isGranted($attributes, $object);
+    }
+
+    protected function getAclFor(ObjectIdentity $identity)
+    {
+        $identity = $this->createObjectIdentity($object);
+
+        try {
+            $acl = $this->provider->createAcl($identity);
+        } catch (AclAlreadyExistsException $e) {
+            $acl = $this->provider->findAcl($identity);
+        }
+
+        return $acl;
+    }
+
+    protected function revokePermission($object, $identity, $mask, $type)
+    {
+        if ($type == 'class') {
+            if (is_object($object)) {
+                $object = get_class($object);
+            }
+        }
+
+        $objectIdentity = $this->createObjectIdentity($object);
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
+        $acl  = $this->getAclFor($object);
+        $aces = $acl->getObjectAces();
+
+        foreach ($aces as $key => $ace) {
+            if ($securityIdentity->equals($ace->getSecurityIdentity())) {
+                $this->removeMask($key, $acl, $ace, $mask);
+            }
+        }
+
+        $this->provider->updateAcl($acl);
+
+        $securityIdentity = $this->createSecurityIdentity($identity);
+    }
+
+    protected function removeMask($index, $acl, $ace, $mask)
+    {
+        $acl->updateObjectAce($indey, $ace->getMask() & ~$mask);
     }
 
     protected function addPermission($object, $identity, $mask, $type)
@@ -58,7 +112,14 @@ class AclManager implements AclManagerInterface
         $securityIdentity = $this->createSecurityIdentity($identity);
 
         $acl = $this->provider->createAcl($objectIdentity);
-        $acl->insertObjectAce($securityIdentity, $mask);
+
+        if ($type == 'object') {
+            $acl->insertObjectAce($securityIdentity, $mask);
+        } elseif ($type == 'class') {
+            $acl->insertClassAce($securityIdentity, $mask);
+        } else {
+            throw new \InvalidArgumentException('This AceType is not valid.');
+        }
 
         $provider->updateAcl($acl);
     }

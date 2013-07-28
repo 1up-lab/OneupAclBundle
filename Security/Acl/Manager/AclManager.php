@@ -42,6 +42,12 @@ class AclManager implements AclManagerInterface
         $this->revokePermission($object, $identity, $mask, 'object');
     }
 
+    public function setObjectPermission($object, $identity, $mask)
+    {
+        $this->revokeObjectPermissions($object);
+        $this->addPermission($object, $identity, $mask, 'object');
+    }
+
     public function addClassPermission($object, $identity, $mask)
     {
         $this->addPermission($object, $identity, $mask, 'class');
@@ -50,6 +56,12 @@ class AclManager implements AclManagerInterface
     public function revokeClassPermission($object, $identity, $mask)
     {
         $this->revokePermission($object, $identity, $mask, 'class');
+    }
+
+    public function setClassPermission($object, $identity, $mask)
+    {
+        $this->revokeClassPermissions($object);
+        $this->addPermission($object, $identity, $mask, 'class');
     }
 
     public function revokeObjectPermissions($object)
@@ -80,6 +92,16 @@ class AclManager implements AclManagerInterface
         }
 
         $this->provider->updateAcl($acl);
+    }
+
+    public function revokePermissions($object)
+    {
+        if (!is_object($object)) {
+            throw new \InvalidArgumentException('Pass an object to remove all permission types.');
+        }
+
+        $this->revokeObjectPermissions($object);
+        $this->revokeClassPermissions($object);
     }
 
     public function isGranted($attributes, $object = null)

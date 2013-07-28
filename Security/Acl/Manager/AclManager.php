@@ -5,6 +5,9 @@ namespace Oneup\AclBundle\Security\Acl\Manager;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
+use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
+use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,12 +31,39 @@ class AclManager implements AclManagerInterface
         $this->strategy = $identityRetrievalStrategy;
     }
 
+    public function addObjectPermission($object, $identity, $mask)
+    {
+        $this->addPermission($object, $identity, $mask, 'object');
+    }
+
+    public function addClassPermission($object, $identity, $mask)
+    {
+        $this->addPermission($object, $identity, $mask, 'class');
+    }
+
     public function isGranted($attributes, $object = null)
     {
         return $this->context->isGranted($attributes, $object);
     }
 
-    protected function createSecurityContext($input)
+    protected function addPermission($object, $identity, $mask, $type)
+    {
+        if ($type == 'class') {
+            if (is_object($object)) {
+                $object = get_class($object);
+            }
+        }
+
+        $objectIdentity = $this->createObjectIdentity($object);
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
+        $acl = $this->provider->createAcl($objectIdentity);
+        $acl->insertObjectAce($securityIdentity, $mask);
+
+        $provider->updateAcl($acl);
+    }
+
+    protected function createSecurityIdentity($input)
     {
         $identity = null;
 
@@ -55,11 +85,11 @@ class AclManager implements AclManagerInterface
     protected function createObjectIdentity($object)
     {
         if (is_object($object)) {
-            return ObjectIdentity::fromDomainObject($object);
+            return $this->strategy->getObjectIdentity($object);
         }
 
         if (is_string($object)) {
-            return new ObjectIdentity('class', ClassUtils::getRealClass(get_class($object)));
+            return new ObjectIdentity('class', ClassUtils::getRealClass($object));
         }
 
         throw new \InvalidArgumentException('Couldn\'t create a valid ObjectIdentity with the provided information');

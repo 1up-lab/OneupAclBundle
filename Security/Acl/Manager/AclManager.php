@@ -52,12 +52,42 @@ class AclManager implements AclManagerInterface
         $this->revokePermission($object, $identity, $mask, 'class');
     }
 
+    public function revokeObjectPermissions($object)
+    {
+        $objectIdentity = $this->createObjectIdentity($object);
+
+        $acl  = $this->getAclFor($object);
+        $aces = $acl->getObjectAces();
+
+        foreach ($aces as $key => $ace) {
+            $acl->deleteObjectAce($ace);
+        }
+
+        $this->provider->updateAcl($acl);
+    }
+
+    public function revokeClassPermissions($object)
+    {
+        if (is_object($object)) {
+            $object = get_class($object);
+        }
+
+        $acl  = $this->getAclFor($object);
+        $aces = $acl->getClassAces();
+
+        foreach ($aces as $key => $ace) {
+            $acl->deleteClassAce($ace);
+        }
+
+        $this->provider->updateAcl($acl);
+    }
+
     public function isGranted($attributes, $object = null)
     {
         return $this->context->isGranted($attributes, $object);
     }
 
-    protected function getAclFor(ObjectIdentity $identity)
+    protected function getAclFor($object)
     {
         $identity = $this->createObjectIdentity($object);
 
@@ -82,7 +112,7 @@ class AclManager implements AclManagerInterface
         $securityIdentity = $this->createSecurityIdentity($identity);
 
         $acl  = $this->getAclFor($object);
-        $aces = $acl->getObjectAces();
+        $aces = $type == 'object' ? $acl->getObjectAces() : $acl->getClassAces();
 
         foreach ($aces as $key => $ace) {
             if ($securityIdentity->equals($ace->getSecurityIdentity())) {
@@ -91,8 +121,6 @@ class AclManager implements AclManagerInterface
         }
 
         $this->provider->updateAcl($acl);
-
-        $securityIdentity = $this->createSecurityIdentity($identity);
     }
 
     protected function removeMask($index, $acl, $ace, $mask)

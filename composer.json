@@ -1,0 +1,32 @@
+{
+    "name": "oneup/acl-bundle",
+    "type": "symfony-bundle",
+    "description": "The missing link between Symfony`s Acl implementation and your application..",
+    "keywords": ["symfony2", "acl", "security"],
+    "homepage": "http://1up.io",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jim Schmid",
+            "email": "js@1up.io",
+            "homepage": "http://1up.io",
+            "role": "Developer"
+        }
+    ],
+    
+    "require": {
+        "symfony/security": "~2.1",
+        "doctrine/common": "~2.2",
+        "doctrine/dbal": "~2.2"
+    },
+    
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    
+    "autoload": {
+        "psr-0": { "Oneup\\AclBundle": "" }
+    },
+
+    "target-dir": "Oneup/AclBundle"
+}

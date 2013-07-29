@@ -45,7 +45,7 @@ class AclManager implements AclManagerInterface
 
     public function setObjectPermission($object, $identity, $mask)
     {
-        $this->revokeObjectPermissions($object);
+        $this->revokeObjectPermissions($object, $identity);
         $this->addPermission($object, $identity, $mask, 'object');
     }
 
@@ -61,48 +61,60 @@ class AclManager implements AclManagerInterface
 
     public function setClassPermission($object, $identity, $mask)
     {
-        $this->revokeClassPermissions($object);
+        $this->revokeClassPermissions($object, $identity);
         $this->addPermission($object, $identity, $mask, 'class');
     }
 
-    public function revokeObjectPermissions($object)
+    public function revokeObjectPermissions($object, $identity)
     {
-        $objectIdentity = $this->createObjectIdentity($object);
+        $securityIdentity = $this->createSecurityIdentity($identity);
 
         $acl  = $this->getAclFor($object);
         $aces = $acl->getObjectAces();
 
-        foreach ($aces as $key => $ace) {
-            $acl->deleteObjectAce($key);
+        $size = count($aces) - 1;
+        reset($aces);
+
+        for ($i = $size; $i >= 0; $i --) {
+            if ($securityIdentity->equals($aces[$i]->getSecurityIdentity())) {
+                $acl->deleteObjectAce($i);
+            }
         }
 
         $this->provider->updateAcl($acl);
     }
 
-    public function revokeClassPermissions($object)
+    public function revokeClassPermissions($object, $identity)
     {
         if (is_object($object)) {
             $object = get_class($object);
         }
 
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
         $acl  = $this->getAclFor($object);
         $aces = $acl->getClassAces();
 
-        foreach ($aces as $key => $ace) {
-            $acl->deleteClassAce($key);
+        $size = count($aces) - 1;
+        reset($aces);
+
+        for ($i = $size; $i >= 0; $i --) {
+            if ($securityIdentity->equals($aces[$i]->getSecurityIdentity())) {
+                $acl->deleteClassAce($i);
+            }
         }
 
         $this->provider->updateAcl($acl);
     }
 
-    public function revokePermissions($object)
+    public function revokePermissions($object, $identity)
     {
         if (!is_object($object)) {
             throw new \InvalidArgumentException('Pass an object to remove all permission types.');
         }
 
-        $this->revokeObjectPermissions($object);
-        $this->revokeClassPermissions($object);
+        $this->revokeObjectPermissions($object, $identity);
+        $this->revokeClassPermissions($object, $identity);
     }
 
     public function isGranted($attributes, $object = null)

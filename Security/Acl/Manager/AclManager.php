@@ -22,7 +22,6 @@ class AclManager implements AclManagerInterface
     protected $provider;
     protected $context;
     protected $strategy;
-    protected $permissionObject;
 
     public function __construct(
         MutableAclProviderInterface $provider,
@@ -123,7 +122,7 @@ class AclManager implements AclManagerInterface
         $object = new AclPermission($identity);
         $object->grant($identity);
 
-        return $this->permissionObject = $object;
+        return $object;
     }
 
     public function revoke($identity)
@@ -131,17 +130,26 @@ class AclManager implements AclManagerInterface
         $object = new AclPermission($identity);
         $object->revoke($identity);
 
-        return $this->permissionObject = $object;
+        return $object;
     }
 
     public function compile(AclPermission $permission)
     {
-        list($grant, $identity, $object, $mask) = $permission->compile();
+        list($grant, $type, $identity, $object, $mask) = $permission->compile();
 
-        if ($grant) {
-            $this->addObjectPermission($object, $identity, $mask);
+        if (is_null($identity)) {
+            $identity = $this->getCurrentAuthenticationToken();
+        }
+
+        if (!is_null($mask)) {
+            $grant ?
+                $this->addPermission($object, $identity, $mask, $type) :
+                $this->revokePermission($object, $identity, $mask, $type)
+            ;
         } else {
-            $this->revokeObjectPermission($object, $identity, $mask);
+            if (!$grant) {
+                $this->revokePermissions($object, $identity);
+            }
         }
     }
 
@@ -254,5 +262,16 @@ class AclManager implements AclManagerInterface
         }
 
         throw new \InvalidArgumentException('Couldn\'t create a valid ObjectIdentity with the provided information');
+    }
+
+    protected function getCurrentAuthenticationToken()
+    {
+        $token = $this->context->getToken();
+
+        if (!is_null($token)) {
+            $token = $token->getUser();
+        }
+
+        return $token;
     }
 }

@@ -161,7 +161,7 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertFalse($manager->isGranted('UNDELETE', $object2));
     }
 
-    public function testGrantPermissionObject()
+    public function testObjectGrantPermissionObject()
     {
         $manager = $this->getManager();
         $token = $this->getToken();
@@ -169,13 +169,13 @@ class AclManagerTest extends AbstractSecurityTest
         $object = new DomainObject(1);
 
         $manager->compile(
-            $manager->grant($token)->access($object)->with(MaskBuilder::MASK_OWNER)
+            $manager->grant($token)->accessTo($object)->with(MaskBuilder::MASK_OWNER)
         );
 
         $this->assertTrue($manager->isGranted('OWNER', $object));
     }
 
-    public function testRevokePermissionObject()
+    public function testObjectRevokePermissionObject()
     {
         $manager = $this->getManager();
         $token = $this->getToken();
@@ -183,13 +183,13 @@ class AclManagerTest extends AbstractSecurityTest
         $object = new DomainObject(1);
 
         $manager->compile(
-            $manager->grant($token)->access($object)->with(MaskBuilder::MASK_OWNER)
+            $manager->grant($token)->accessTo($object)->with(MaskBuilder::MASK_OWNER)
         );
 
         $this->assertTrue($manager->isGranted('OWNER', $object));
 
         $manager->compile(
-            $manager->revoke($token)->access($object)->with(MaskBuilder::MASK_OWNER)
+            $manager->revoke($token)->accessTo($object)->with(MaskBuilder::MASK_OWNER)
         );
 
         $this->assertFalse($manager->isGranted('OWNER', $object));

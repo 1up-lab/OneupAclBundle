@@ -22,6 +22,7 @@ class AclManager implements AclManagerInterface
     protected $provider;
     protected $context;
     protected $strategy;
+    protected $permissionObject;
 
     public function __construct(
         MutableAclProviderInterface $provider,
@@ -115,6 +116,33 @@ class AclManager implements AclManagerInterface
 
         $this->revokeObjectPermissions($object, $identity);
         $this->revokeClassPermissions($object, $identity);
+    }
+
+    public function grant($identity)
+    {
+        $object = new AclPermission($identity);
+        $object->grant($identity);
+
+        return $this->permissionObject = $object;
+    }
+
+    public function revoke($identity)
+    {
+        $object = new AclPermission($identity);
+        $object->revoke($identity);
+
+        return $this->permissionObject = $object;
+    }
+
+    public function compile(AclPermission $permission)
+    {
+        list($grant, $identity, $object, $mask) = $permission->compile();
+
+        if ($grant) {
+            $this->addObjectPermission($object, $identity, $mask);
+        } else {
+            $this->revokeObjectPermission($object, $identity, $mask);
+        }
     }
 
     public function isGranted($attributes, $object = null)

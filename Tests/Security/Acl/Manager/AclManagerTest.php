@@ -161,6 +161,40 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertFalse($manager->isGranted('UNDELETE', $object2));
     }
 
+    public function testGrantPermissionObject()
+    {
+        $manager = $this->getManager();
+        $token = $this->getToken();
+
+        $object = new DomainObject(1);
+
+        $manager->compile(
+            $manager->grant($token)->access($object)->with(MaskBuilder::MASK_OWNER)
+        );
+
+        $this->assertTrue($manager->isGranted('OWNER', $object));
+    }
+
+    public function testRevokePermissionObject()
+    {
+        $manager = $this->getManager();
+        $token = $this->getToken();
+
+        $object = new DomainObject(1);
+
+        $manager->compile(
+            $manager->grant($token)->access($object)->with(MaskBuilder::MASK_OWNER)
+        );
+
+        $this->assertTrue($manager->isGranted('OWNER', $object));
+
+        $manager->compile(
+            $manager->revoke($token)->access($object)->with(MaskBuilder::MASK_OWNER)
+        );
+
+        $this->assertFalse($manager->isGranted('OWNER', $object));
+    }
+
     public function testIfAclManagerLoads()
     {
         $manager = $this->getManager();

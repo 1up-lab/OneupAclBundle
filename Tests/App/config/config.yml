@@ -1,0 +1,29 @@
+framework:
+    translator: { fallback: en }
+    secret: secret
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: %kernel.debug%
+    templating:
+        engines: ['php']
+    default_locale: en
+    session: ~
+    test: ~
+
+security:
+    acl:
+        connection: default
+    providers:
+        in_memory:
+            memory: ~
+    firewalls:
+        main:
+            anonymous: true
+            pattern: ^/
+
+doctrine:
+    dbal:
+        connections:
+            default:
+                driver: pdo_sqlite
+                memory: true

@@ -15,12 +15,16 @@
     ],
     
     "require": {
-        "symfony/security": "~2.1",
+        "symfony/framework-bundle": "2.*",
+        "symfony/security-bundle": "2.*",
+        "doctrine/doctrine-bundle": "dev-master",
         "doctrine/common": "~2.2",
         "doctrine/dbal": "~2.2"
     },
     
     "require-dev": {
+        "symfony/finder": ">=2.0.16,<2.4-dev",
+        "symfony/browser-kit": "2.*",
         "phpunit/phpunit": "3.7.*"
     },
     

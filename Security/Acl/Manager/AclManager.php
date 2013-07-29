@@ -10,6 +10,7 @@ use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Util\ClassUtils;
@@ -24,12 +25,12 @@ class AclManager implements AclManagerInterface
 
     public function __construct(
         MutableAclProviderInterface $provider,
-        SecurityContextInterface $securityContext,
-        ObjectIdentityRetrievalStrategyInterface $identityRetrievalStrategy
+        SecurityContextInterface $context,
+        ObjectIdentityRetrievalStrategyInterface $strategy
     ) {
         $this->provider = $provider;
         $this->context = $context;
-        $this->strategy = $identityRetrievalStrategy;
+        $this->strategy = $strategy;
     }
 
     public function addObjectPermission($object, $identity, $mask)

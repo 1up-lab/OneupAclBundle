@@ -13,3 +13,7 @@ app/config/parameters.ini
 app/config/parameters.yml
 
 composer.lock
+
+Tests/App/cache
+Tests/App/logs
+phpunit.xml

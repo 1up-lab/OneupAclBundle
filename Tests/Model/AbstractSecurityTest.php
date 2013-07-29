@@ -7,7 +7,7 @@ use Symfony\Component\Security\Acl\Dbal\Schema;
 */
 
 use Symfony\Component\Security\Acl\Dbal\Schema;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class AbstractSecurityTest extends WebTestCase
@@ -33,11 +33,9 @@ abstract class AbstractSecurityTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->container = $this->client->getContainer();
-        $this->container->get('security.context')->setToken(new AnonymousToken(
-            'key', 'anonymous', array(
-                'ROLE_USER'
-            )
-        ));
+
+        $this->token = new UsernamePasswordToken('bob', null, 'main', array('ROLE_USER'));
+        $this->container->get('security.context')->setToken($this->token);
 
         $this->connection = $this->container->get('database_connection');
 
@@ -65,5 +63,10 @@ abstract class AbstractSecurityTest extends WebTestCase
     protected function getManager()
     {
         return $this->manager;
+    }
+
+    protected function getToken()
+    {
+        return $this->token;
     }
 }

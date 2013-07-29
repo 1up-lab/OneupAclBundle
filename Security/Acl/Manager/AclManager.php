@@ -107,6 +107,11 @@ class AclManager implements AclManagerInterface
 
     public function isGranted($attributes, $object = null)
     {
+        if (is_object($object)) {
+            // preload acl
+            $this->getAclFor($object);
+        }
+
         return $this->context->isGranted($attributes, $object);
     }
 
@@ -139,16 +144,22 @@ class AclManager implements AclManagerInterface
 
         foreach ($aces as $key => $ace) {
             if ($securityIdentity->equals($ace->getSecurityIdentity())) {
-                $this->removeMask($key, $acl, $ace, $mask);
+                $this->removeMask($key, $acl, $ace, $mask, $type);
             }
         }
 
         $this->provider->updateAcl($acl);
     }
 
-    protected function removeMask($index, $acl, $ace, $mask)
+    protected function removeMask($index, $acl, $ace, $mask, $type)
     {
-        $acl->updateObjectAce($indey, $ace->getMask() & ~$mask);
+        if ($type == 'object') {
+            $acl->updateObjectAce($index, $ace->getMask() & ~$mask);
+        }
+
+        if ($type == 'class') {
+            $acl->updateClassAce($index, $ace->getMask() & ~$mask);
+        }
     }
 
     protected function addPermission($object, $identity, $mask, $type)
@@ -172,7 +183,7 @@ class AclManager implements AclManagerInterface
             throw new \InvalidArgumentException('This AceType is not valid.');
         }
 
-        $provider->updateAcl($acl);
+        $this->provider->updateAcl($acl);
     }
 
     protected function createSecurityIdentity($input)
@@ -182,9 +193,9 @@ class AclManager implements AclManagerInterface
         if ($input instanceof UserInterface) {
             $identity = UserSecurityIdentity::fromAccount($input);
         } elseif ($input instanceof TokenInterface) {
-            $identity = UserSecurityIdentity::fromToken($identity);
+            $identity = UserSecurityIdentity::fromToken($input);
         } elseif ($input instanceof RoleInterface || is_string($input)) {
-            $identity = new RoleSecurityIdentity($identity);
+            $identity = new RoleSecurityIdentity($input);
         }
 
         if (!$identity instanceof SecurityIdentityInterface) {

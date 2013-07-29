@@ -29,6 +29,22 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object));
     }
 
+    public function testSetOfObjectPermission()
+    {
+        $manager = $this->getManager();
+        $token = $this->getToken();
+
+        $object = new DomainObject(1);
+
+        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
+        $this->assertTrue($manager->isGranted('OWNER', $object));
+
+        // overwrite
+        $manager->setObjectPermission($object, $token, MaskBuilder::MASK_VIEW);
+        $this->assertFalse($manager->isGranted('OWNER', $object));
+        $this->assertTrue($manager->isGranted('VIEW', $object));
+    }
+
     public function testRevokeOfObjectPermission()
     {
         $manager = $this->getManager();
@@ -66,6 +82,26 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object));
     }
 
+    public function testSetOfClassPermission()
+    {
+        $manager = $this->getManager();
+        $token = $this->getToken();
+
+        $object1 = new DomainObject(1);
+        $object2 = new DomainObject(1);
+
+        $manager->addObjectPermission($object1, $token, MaskBuilder::MASK_OWNER);
+        $this->assertTrue($manager->isGranted('OWNER', $object1));
+        $this->assertTrue($manager->isGranted('OWNER', $object2));
+
+        // overwrite
+        $manager->setObjectPermission($object1, $token, MaskBuilder::MASK_VIEW);
+        $this->assertFalse($manager->isGranted('OWNER', $object1));
+        $this->assertFalse($manager->isGranted('OWNER', $object2));
+        $this->assertTrue($manager->isGranted('VIEW', $object1));
+        $this->assertTrue($manager->isGranted('VIEW', $object2));
+    }
+
     public function testRevokeOfClassPermission()
     {
         $manager = $this->getManager();
@@ -82,19 +118,6 @@ class AclManagerTest extends AbstractSecurityTest
         $manager->revokeClassPermission($object1, $token, MaskBuilder::MASK_OWNER);
         $this->assertFalse($manager->isGranted('OWNER', $object1));
         $this->assertFalse($manager->isGranted('OWNER', $object2));
-    }
-
-    /**
-     * @expectedException Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException
-     */
-    public function testIfMultiAddThrowsTheCorrectException()
-    {
-        $manager = $this->getManager();
-        $token = $this->getToken();
-
-        $object = new DomainObject(2);
-        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
-        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
     }
 
     public function testIfAclManagerLoads()

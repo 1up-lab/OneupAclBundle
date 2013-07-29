@@ -73,7 +73,7 @@ class AclManager implements AclManagerInterface
         $aces = $acl->getObjectAces();
 
         foreach ($aces as $key => $ace) {
-            $acl->deleteObjectAce($ace);
+            $acl->deleteObjectAce($key);
         }
 
         $this->provider->updateAcl($acl);
@@ -89,7 +89,7 @@ class AclManager implements AclManagerInterface
         $aces = $acl->getClassAces();
 
         foreach ($aces as $key => $ace) {
-            $acl->deleteClassAce($ace);
+            $acl->deleteClassAce($key);
         }
 
         $this->provider->updateAcl($acl);
@@ -170,10 +170,8 @@ class AclManager implements AclManagerInterface
             }
         }
 
-        $objectIdentity = $this->createObjectIdentity($object);
         $securityIdentity = $this->createSecurityIdentity($identity);
-
-        $acl = $this->provider->createAcl($objectIdentity);
+        $acl = $this->getAclFor($object);
 
         if ($type == 'object') {
             $acl->insertObjectAce($securityIdentity, $mask);

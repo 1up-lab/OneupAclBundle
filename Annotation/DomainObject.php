@@ -6,7 +6,7 @@ namespace Oneup\AclBundle\Annotation;
  * @Annotation
  * @Target({"CLASS"})
  */
-class ObjectIdentity
+class DomainObject
 {
     public $removeAcl = true;
 }

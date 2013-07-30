@@ -8,7 +8,7 @@
         <service id="oneup_acl.remove_listener" class="Oneup\AclBundle\EventListener\AclRemoveListener">
             <argument type="service" id="annotation_reader" />
             <argument type="service" id="oneup_acl.manager" />
-            
+
             <tag name="doctrine.event_listener" event="preRemove" />
         </service>
     </services>

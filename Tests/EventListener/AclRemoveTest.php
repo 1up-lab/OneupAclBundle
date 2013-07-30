@@ -10,7 +10,7 @@ class AclRemoveTest extends AbstractSecurityTest
     {
         $this->assertTrue($this->container->has('oneup_acl.remove_listener'));
     }
-    
+
     public function testIfEventListenerIsInstancable()
     {
         $listener = $this->container->get('oneup_acl.remove_listener');

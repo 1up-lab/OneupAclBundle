@@ -2,12 +2,12 @@
 
 namespace Oneup\AclBundle\Tests\Model;
 
-use Oneup\AclBundle\Annotation\ObjectIdentity;
+use Oneup\AclBundle\Annotation\DomainObject;
 
 /**
- * @ObjectIdentity
+ * @DomainObject
  */
-class DomainObject
+class SomeObject
 {
     public function __construct($id)
     {

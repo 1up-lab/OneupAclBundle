@@ -4,7 +4,7 @@ namespace Oneup\AclBundle\Tests\Security\Acl\Manager;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
-use Oneup\AclBundle\Tests\Model\DomainObject;
+use Oneup\AclBundle\Tests\Model\SomeObject;
 
 class AclManagerTest extends AbstractSecurityTest
 {
@@ -13,7 +13,7 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object = new DomainObject(1);
+        $object = new SomeObject(1);
         $manager->addObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
 
         $this->assertTrue($manager->isGranted('OWNER', $object));
@@ -21,7 +21,7 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertTrue($manager->isGranted('EDIT', $object));
         $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object));
 
-        $object = new DomainObject(2);
+        $object = new SomeObject(2);
 
         $this->assertFalse($manager->isGranted('OWNER', $object));
         $this->assertFalse($manager->isGranted('VIEW', $object));
@@ -34,7 +34,7 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object = new DomainObject(1);
+        $object = new SomeObject(1);
 
         $manager->addObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
         $this->assertTrue($manager->isGranted('OWNER', $object));
@@ -50,7 +50,7 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object = new DomainObject(1);
+        $object = new SomeObject(1);
 
         $manager->addObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
         $this->assertTrue($manager->isGranted('OWNER', $object));
@@ -65,7 +65,7 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object = new DomainObject(1);
+        $object = new SomeObject(1);
         $manager->addClassPermission($object, $token, MaskBuilder::MASK_OWNER);
 
         $this->assertTrue($manager->isGranted('OWNER', $object));
@@ -73,7 +73,7 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertTrue($manager->isGranted('EDIT', $object));
         $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object));
 
-        $object = new DomainObject(2);
+        $object = new SomeObject(2);
 
         $this->assertTrue($manager->isGranted('OWNER', $object));
         $this->assertTrue($manager->isGranted('VIEW', $object));
@@ -87,8 +87,8 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object1 = new DomainObject(1);
-        $object2 = new DomainObject(1);
+        $object1 = new SomeObject(1);
+        $object2 = new SomeObject(1);
 
         $manager->addObjectPermission($object1, $token, MaskBuilder::MASK_OWNER);
         $this->assertTrue($manager->isGranted('OWNER', $object1));
@@ -107,8 +107,8 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object1 = new DomainObject(1);
-        $object2 = new DomainObject(2);
+        $object1 = new SomeObject(1);
+        $object2 = new SomeObject(2);
 
         $manager->addClassPermission($object1, $token, MaskBuilder::MASK_OWNER);
         $this->assertTrue($manager->isGranted('OWNER', $object1));
@@ -125,7 +125,7 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object = new DomainObject(1);
+        $object = new SomeObject(1);
 
         $manager->addObjectPermission($object, $token, MaskBuilder::MASK_DELETE);
         $manager->addObjectPermission($object, $token, MaskBuilder::MASK_UNDELETE);
@@ -143,8 +143,8 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object1 = new DomainObject(1);
-        $object2 = new DomainObject(1);
+        $object1 = new SomeObject(1);
+        $object2 = new SomeObject(1);
 
         $manager->addClassPermission($object1, $token, MaskBuilder::MASK_DELETE);
         $manager->addClassPermission($object1, $token, MaskBuilder::MASK_UNDELETE);
@@ -166,7 +166,7 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object = new DomainObject(1);
+        $object = new SomeObject(1);
 
         $manager->compile(
             $manager->grant($token)->accessTo($object)->with(MaskBuilder::MASK_OWNER)
@@ -180,7 +180,7 @@ class AclManagerTest extends AbstractSecurityTest
         $manager = $this->getManager();
         $token = $this->getToken();
 
-        $object = new DomainObject(1);
+        $object = new SomeObject(1);
 
         $manager->compile(
             $manager->grant($token)->accessTo($object)->with(MaskBuilder::MASK_OWNER)

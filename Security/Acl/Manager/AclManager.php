@@ -197,6 +197,28 @@ class AclManager implements AclManagerInterface
         $this->provider->updateAcl($acl);
     }
 
+    public function revokeAllObjectFieldPermissions($object)
+    {
+        $acl = $this->getAclFor($object);
+
+        $reflection = new \ReflectionClass($object);
+        $properties = $reflection->getProperties();
+
+        foreach ($properties as $property) {
+            $field = $property->getName();
+            $fieldAces = $acl->getObjectFieldAces($field);
+
+            $size = count($fieldAces) - 1;
+            reset($fieldAces);
+
+            for ($i = $size; $i >= 0; $i--) {
+                $acl->deleteObjectFieldAce($i, $field);
+            }
+        }
+
+        $this->provider->updateAcl($acl);
+    }
+
     public function revokeAllClassPermissions($object)
     {
         if (is_object($object)) {
@@ -211,6 +233,28 @@ class AclManager implements AclManagerInterface
 
         for ($i = $size; $i >= 0; $i--) {
             $acl->deleteClassAce($i);
+        }
+
+        $this->provider->updateAcl($acl);
+    }
+
+    public function revokeAllClassFieldPermissions($object)
+    {
+        $acl = $this->getAclFor($object);
+
+        $reflection = new \ReflectionClass($object);
+        $properties = $reflection->getProperties();
+
+        foreach ($properties as $property) {
+            $field = $property->getName();
+            $fieldAces = $acl->getClassFieldAces($field);
+
+            $size = count($fieldAces) - 1;
+            reset($fieldAces);
+
+            for ($i = $size; $i >= 0; $i--) {
+                $acl->deleteClassFieldAce($i, $field);
+            }
         }
 
         $this->provider->updateAcl($acl);

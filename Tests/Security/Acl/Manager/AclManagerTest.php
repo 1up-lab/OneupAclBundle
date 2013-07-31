@@ -157,7 +157,7 @@ class AclManagerTest extends AbstractSecurityTest
         $manager->revokeClassPermissions($object1, $token);
         $this->assertFalse($manager->isGranted('DELETE', $object1));
         $this->assertFalse($manager->isGranted('UNDELETE', $object1));
-        $this->assertFalse($manager->isGranted('DELETE', $object1));
+        $this->assertFalse($manager->isGranted('DELETE', $object2));
         $this->assertFalse($manager->isGranted('UNDELETE', $object2));
     }
 

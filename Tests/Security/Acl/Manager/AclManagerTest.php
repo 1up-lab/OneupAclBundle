@@ -8,6 +8,22 @@ use Oneup\AclBundle\Tests\Model\SomeObject;
 
 class AclManagerTest extends AbstractSecurityTest
 {
+    public function testIfTokenIsGrantedByGroup()
+    {
+        $currentToken = $this->getToken();
+        $adminToken = $this->createToken(array('ROLE_ADMIN'));
+        $manager = $this->getManager();
+
+        $object = new SomeObject(1);
+
+        $manager->addObjectPermission($object, 'ROLE_ADMIN', MaskBuilder::MASK_VIEW);
+        $this->assertFalse($manager->isGranted('VIEW', $object));
+
+        // set token to admin token and try again
+        $this->container->get('security.context')->setToken($adminToken);
+        $this->assertTrue($manager->isGranted('VIEW', $object));
+    }
+
     public function testAddOfObjectPermission()
     {
         $manager = $this->getManager();

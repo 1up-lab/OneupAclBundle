@@ -30,7 +30,7 @@ abstract class AbstractSecurityTest extends WebTestCase
         $this->client = static::createClient();
         $this->container = $this->client->getContainer();
 
-        $this->token = new UsernamePasswordToken('bob', null, 'main', array('ROLE_USER'));
+        $this->token = $this->createToken();
         $this->container->get('security.context')->setToken($this->token);
 
         $this->connection = $this->container->get('database_connection');
@@ -64,5 +64,12 @@ abstract class AbstractSecurityTest extends WebTestCase
     protected function getToken()
     {
         return $this->token;
+    }
+
+    protected function createToken(array $roles = array())
+    {
+        $roles += array('ROLE_USER');
+
+        return new UsernamePasswordToken(uniqid(), null, 'main', $roles);
     }
 }

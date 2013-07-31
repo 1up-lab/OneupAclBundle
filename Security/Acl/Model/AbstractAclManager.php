@@ -6,12 +6,9 @@ use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException;
-use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
-use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Acl\Voter\FieldVote;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Util\ClassUtils;
@@ -20,19 +17,9 @@ use Oneup\AclBundle\Security\Acl\Model\AclManagerInterface;
 
 abstract class AbstractAclManager implements AclManagerInterface
 {
-    protected $provider;
-    protected $context;
-    protected $strategy;
-
-    public function __construct(
-        MutableAclProviderInterface $provider,
-        SecurityContextInterface $context,
-        ObjectIdentityRetrievalStrategyInterface $strategy
-    ) {
-        $this->provider = $provider;
-        $this->context = $context;
-        $this->strategy = $strategy;
-    }
+    abstract protected function getProvider();
+    abstract protected function getSecurityContext();
+    abstract protected function getObjectIdentityStrategy();
 
     public function addObjectPermission($object, $identity, $mask)
     {
@@ -82,7 +69,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             }
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     public function revokeClassPermissions($object, $identity)
@@ -105,7 +92,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             }
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     public function addClassFieldPermission($object, $field, $identity, $mask)
@@ -160,7 +147,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             }
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     public function revokeObjectFieldPermissions($object, $field, $identity)
@@ -179,7 +166,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             }
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     public function revokeAllObjectPermissions($object)
@@ -194,7 +181,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             $acl->deleteObjectAce($i);
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     public function revokeAllObjectFieldPermissions($object)
@@ -216,7 +203,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             }
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     public function revokeAllClassPermissions($object)
@@ -235,7 +222,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             $acl->deleteClassAce($i);
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     public function revokeAllClassFieldPermissions($object)
@@ -257,7 +244,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             }
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     public function isGranted($attributes, $object = null, $field = null)
@@ -272,7 +259,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             $object = new FieldVote($oid, $field);
         }
 
-        return $this->context->isGranted($attributes, $object);
+        return $this->getSecurityContext()->isGranted($attributes, $object);
     }
 
     protected function revokePermissions($object, $identity)
@@ -290,9 +277,9 @@ abstract class AbstractAclManager implements AclManagerInterface
         $identity = $this->createObjectIdentity($object);
 
         try {
-            $acl = $this->provider->createAcl($identity);
+            $acl = $this->getProvider()->createAcl($identity);
         } catch (AclAlreadyExistsException $e) {
-            $acl = $this->provider->findAcl($identity);
+            $acl = $this->getProvider()->findAcl($identity);
         }
 
         return $acl;
@@ -320,7 +307,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             }
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     protected function revokeFieldPermission($object, $field, $identity, $mask, $type)
@@ -345,7 +332,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             }
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     protected function removeFieldMask($index, $field, $acl, $fieldAce, $mask, $type)
@@ -388,7 +375,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             $acl->deleteClassAce($i);
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     protected function addPermission($object, $identity, $mask, $type)
@@ -410,7 +397,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             throw new \InvalidArgumentException('This AceType is not valid.');
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     protected function addFieldPermission($object, $field, $identity, $mask, $type)
@@ -432,7 +419,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             throw new \InvalidArgumentException('This AceType is not valid');
         }
 
-        $this->provider->updateAcl($acl);
+        $this->getProvider()->updateAcl($acl);
     }
 
     protected function createSecurityIdentity($input)
@@ -457,7 +444,7 @@ abstract class AbstractAclManager implements AclManagerInterface
     protected function createObjectIdentity($object)
     {
         if (is_object($object)) {
-            return $this->strategy->getObjectIdentity($object);
+            return $this->getObjectIdentityStrategy()->getObjectIdentity($object);
         }
 
         if (is_string($object)) {
@@ -469,7 +456,7 @@ abstract class AbstractAclManager implements AclManagerInterface
 
     protected function getCurrentAuthenticationToken()
     {
-        $token = $this->context->getToken();
+        $token = $this->getSecurityContext()->getToken();
 
         if (!is_null($token)) {
             $token = $token->getUser();

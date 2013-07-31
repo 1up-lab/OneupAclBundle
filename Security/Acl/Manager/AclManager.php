@@ -2,10 +2,43 @@
 
 namespace Oneup\AclBundle\Security\Acl\Manager;
 
+use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
+use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+
 use Oneup\AclBundle\Security\Acl\Model\AbstractAclManager;
 
 class AclManager extends AbstractAclManager
 {
+    protected $provider;
+    protected $context;
+    protected $strategy;
+
+    public function __construct(
+        MutableAclProviderInterface $provider,
+        SecurityContextInterface $context,
+        ObjectIdentityRetrievalStrategyInterface $strategy
+    ) {
+        $this->provider = $provider;
+        $this->context = $context;
+        $this->strategy = $strategy;
+    }
+
+    public function getProvider()
+    {
+        return $this->provider;
+    }
+
+    public function getSecurityContext()
+    {
+        return $this->context;
+    }
+
+    public function getObjectIdentityStrategy()
+    {
+        return $this->strategy;
+    }
+
     public function grant($identity)
     {
         $object = new AclPermission($identity);

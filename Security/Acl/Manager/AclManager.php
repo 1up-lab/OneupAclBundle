@@ -33,40 +33,6 @@ class AclManager implements AclManagerInterface
         $this->strategy = $strategy;
     }
 
-    public function revokeAllClassPermissions($object)
-    {
-        if (is_object($object)) {
-            $object = get_class($object);
-        }
-
-        $acl  = $this->getAclFor($object);
-        $aces = $acl->getClassAces();
-
-        $size = count($aces) - 1;
-        reset($aces);
-
-        for ($i = $size; $i >= 0; $i--) {
-            $acl->deleteClassAce($i);
-        }
-
-        $this->provider->updateAcl($acl);
-    }
-
-    public function revokeAllObjectPermissions($object)
-    {
-        $acl  = $this->getAclFor($object);
-        $aces = $acl->getObjectAces();
-
-        $size = count($aces) - 1;
-        reset($aces);
-
-        for ($i = $size; $i >= 0; $i--) {
-            $acl->deleteObjectAce($i);
-        }
-
-        $this->provider->updateAcl($acl);
-    }
-
     public function addObjectPermission($object, $identity, $mask)
     {
         $this->addPermission($object, $identity, $mask, 'object');
@@ -141,14 +107,38 @@ class AclManager implements AclManagerInterface
         $this->provider->updateAcl($acl);
     }
 
-    public function revokePermissions($object, $identity)
+    public function revokeAllObjectPermissions($object)
     {
-        if (!is_object($object)) {
-            throw new \InvalidArgumentException('Pass an object to remove all permission types.');
+        $acl  = $this->getAclFor($object);
+        $aces = $acl->getObjectAces();
+
+        $size = count($aces) - 1;
+        reset($aces);
+
+        for ($i = $size; $i >= 0; $i--) {
+            $acl->deleteObjectAce($i);
         }
 
-        $this->revokeObjectPermissions($object, $identity);
-        $this->revokeClassPermissions($object, $identity);
+        $this->provider->updateAcl($acl);
+    }
+
+    public function revokeAllClassPermissions($object)
+    {
+        if (is_object($object)) {
+            $object = get_class($object);
+        }
+
+        $acl  = $this->getAclFor($object);
+        $aces = $acl->getClassAces();
+
+        $size = count($aces) - 1;
+        reset($aces);
+
+        for ($i = $size; $i >= 0; $i--) {
+            $acl->deleteClassAce($i);
+        }
+
+        $this->provider->updateAcl($acl);
     }
 
     public function grant($identity)
@@ -195,6 +185,16 @@ class AclManager implements AclManagerInterface
         }
 
         return $this->context->isGranted($attributes, $object);
+    }
+
+    protected function revokePermissions($object, $identity)
+    {
+        if (!is_object($object)) {
+            throw new \InvalidArgumentException('Pass an object to remove all permission types.');
+        }
+
+        $this->revokeObjectPermissions($object, $identity);
+        $this->revokeClassPermissions($object, $identity);
     }
 
     protected function getAclFor($object)
@@ -245,6 +245,27 @@ class AclManager implements AclManagerInterface
         if ($type == 'class') {
             $acl->updateClassAce($index, $ace->getMask() & ~$mask);
         }
+    }
+
+    protected function revokeAllPermissions($object, $type)
+    {
+        if ($type == 'class') {
+            if (is_object($object)) {
+                $object = get_class($object);
+            }
+        }
+
+        $acl  = $this->getAclFor($object);
+        $aces = $acl->getClassAces();
+
+        $size = count($aces) - 1;
+        reset($aces);
+
+        for ($i = $size; $i >= 0; $i--) {
+            $acl->deleteClassAce($i);
+        }
+
+        $this->provider->updateAcl($acl);
     }
 
     protected function addPermission($object, $identity, $mask, $type)

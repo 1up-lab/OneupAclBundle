@@ -124,6 +124,22 @@ class AclManager implements AclManagerInterface
         $this->revokeFieldPermission($object, $field, $identity, $mask, 'class');
     }
 
+    public function addObjectFieldPermission($object, $field, $identity, $mask)
+    {
+        $this->addFieldPermission($object, $field, $identity, $mask, 'object');
+    }
+
+    public function setObjectFieldPermission($object, $field, $identity, $mask)
+    {
+        $this->revokeObjectFieldPermissions($object, $field, $identity);
+        $this->addFieldPermission($object, $field, $identity, $mask, 'object');
+    }
+
+    public function revokeObjectFieldPermission($object, $field, $identity, $mask)
+    {
+        $this->revokeFieldPermission($object, $field, $identity, $mask, 'object');
+    }
+
     public function revokeClassFieldPermissions($object, $field, $identity)
     {
         if (is_object($object)) {
@@ -141,6 +157,25 @@ class AclManager implements AclManagerInterface
         for ($i = $size; $i >= 0; $i--) {
             if ($securityIdentity->equals($fieldAces[$i]->getSecurityIdentity())) {
                 $acl->deleteClassFieldAce($i, $field);
+            }
+        }
+
+        $this->provider->updateAcl($acl);
+    }
+
+    public function revokeObjectFieldPermissions($object, $field, $identity)
+    {
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
+        $acl  = $this->getAclFor($object);
+        $fieldAces = $acl->getObjectFieldAces($field);
+
+        $size = count($fieldAces) - 1;
+        reset($fieldAces);
+
+        for ($i = $size; $i >= 0; $i--) {
+            if ($securityIdentity->equals($fieldAces[$i]->getSecurityIdentity())) {
+                $acl->deleteObjectFieldAce($i, $field);
             }
         }
 

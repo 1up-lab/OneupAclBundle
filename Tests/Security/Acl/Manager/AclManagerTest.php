@@ -19,14 +19,14 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertTrue($manager->isGranted('OWNER', $object));
         $this->assertTrue($manager->isGranted('VIEW', $object));
         $this->assertTrue($manager->isGranted('EDIT', $object));
-        $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object));
 
         $object = new SomeObject(2);
 
         $this->assertFalse($manager->isGranted('OWNER', $object));
         $this->assertFalse($manager->isGranted('VIEW', $object));
         $this->assertFalse($manager->isGranted('EDIT', $object));
-        $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object));
     }
 
     public function testSetOfObjectPermission()
@@ -71,7 +71,7 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertTrue($manager->isGranted('OWNER', $object));
         $this->assertTrue($manager->isGranted('VIEW', $object));
         $this->assertTrue($manager->isGranted('EDIT', $object));
-        $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object));
 
         $object = new SomeObject(2);
 
@@ -79,7 +79,7 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertTrue($manager->isGranted('VIEW', $object));
         $this->assertTrue($manager->isGranted('EDIT', $object));
 
-        $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object));
     }
 
     public function testSetOfClassPermission()
@@ -263,17 +263,16 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertTrue($manager->isGranted('OWNER', $object, 'foo'));
         $this->assertTrue($manager->isGranted('EDIT', $object, 'foo'));
         $this->assertTrue($manager->isGranted('VIEW', $object, 'bar'));
-        $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object, 'foo'));
-        $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object, 'bar'));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object, 'foo'));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object, 'bar'));
 
         $object = new SomeObject(2);
 
         $this->assertTrue($manager->isGranted('OWNER', $object, 'foo'));
         $this->assertTrue($manager->isGranted('VIEW', $object, 'bar'));
         $this->assertTrue($manager->isGranted('EDIT', $object, 'foo'));
-
-        $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object, 'foo'));
-        $this->assertFalse($manager->isGranted('NOT_EXISTANT', $object, 'bar'));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object, 'foo'));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object, 'bar'));
     }
 
     public function testSetOfClassFieldPermission()
@@ -282,10 +281,10 @@ class AclManagerTest extends AbstractSecurityTest
         $token = $this->getToken();
 
         $object1 = new SomeObject(1);
-        $object2 = new SomeObject(1);
+        $object2 = new SomeObject(2);
 
         $manager->addClassFieldPermission($object1, 'foo', $token, MaskBuilder::MASK_OWNER);
-        $manager->addClassFieldPermission($object1, 'bar', $token, MaskBuilder::MASK_VIEW);
+        $manager->addClassFieldPermission($object2, 'bar', $token, MaskBuilder::MASK_VIEW);
         $this->assertTrue($manager->isGranted('OWNER', $object1, 'foo'));
         $this->assertTrue($manager->isGranted('OWNER', $object2, 'foo'));
         $this->assertTrue($manager->isGranted('VIEW', $object1, 'bar'));
@@ -293,7 +292,7 @@ class AclManagerTest extends AbstractSecurityTest
 
         // overwrite
         $manager->setClassFieldPermission($object1, 'foo', $token, MaskBuilder::MASK_VIEW);
-        $manager->setClassFieldPermission($object1, 'bar', $token, MaskBuilder::MASK_OWNER);
+        $manager->setClassFieldPermission($object2, 'bar', $token, MaskBuilder::MASK_OWNER);
         $this->assertFalse($manager->isGranted('OWNER', $object1, 'foo'));
         $this->assertFalse($manager->isGranted('OWNER', $object2, 'foo'));
         $this->assertTrue($manager->isGranted('VIEW', $object1, 'bar'));
@@ -309,7 +308,7 @@ class AclManagerTest extends AbstractSecurityTest
         $object2 = new SomeObject(2);
 
         $manager->addClassFieldPermission($object1, 'foo', $token, MaskBuilder::MASK_OWNER);
-        $manager->addClassFieldPermission($object1, 'bar', $token, MaskBuilder::MASK_VIEW);
+        $manager->addClassFieldPermission($object2, 'bar', $token, MaskBuilder::MASK_VIEW);
         $this->assertTrue($manager->isGranted('OWNER', $object1, 'foo'));
         $this->assertTrue($manager->isGranted('OWNER', $object2, 'foo'));
         $this->assertTrue($manager->isGranted('VIEW', $object1, 'bar'));
@@ -318,6 +317,78 @@ class AclManagerTest extends AbstractSecurityTest
         // revoke
         $manager->revokeClassFieldPermission($object1, 'foo', $token, MaskBuilder::MASK_OWNER);
         $manager->revokeClassFieldPermission($object2, 'bar', $token, MaskBuilder::MASK_VIEW);
+        $this->assertFalse($manager->isGranted('OWNER', $object1, 'foo'));
+        $this->assertFalse($manager->isGranted('OWNER', $object2, 'foo'));
+        $this->assertFalse($manager->isGranted('VIEW', $object1, 'bar'));
+        $this->assertFalse($manager->isGranted('VIEW', $object2, 'bar'));
+    }
+
+    public function testAddOfObjectFieldPermission()
+    {
+        $manager = $this->getManager();
+        $token = $this->getToken();
+
+        $object = new SomeObject(1);
+        $manager->addObjectFieldPermission($object, 'foo', $token, MaskBuilder::MASK_OWNER);
+        $manager->addObjectFieldPermission($object, 'bar', $token, MaskBuilder::MASK_VIEW);
+
+        $this->assertTrue($manager->isGranted('OWNER', $object, 'foo'));
+        $this->assertTrue($manager->isGranted('EDIT', $object, 'foo'));
+        $this->assertTrue($manager->isGranted('VIEW', $object, 'bar'));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object, 'foo'));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object, 'bar'));
+
+        $object = new SomeObject(2);
+
+        $this->assertFalse($manager->isGranted('OWNER', $object, 'foo'));
+        $this->assertFalse($manager->isGranted('VIEW', $object, 'bar'));
+        $this->assertFalse($manager->isGranted('EDIT', $object, 'foo'));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object, 'foo'));
+        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object, 'bar'));
+    }
+
+    public function testSetOfObjectFieldPermission()
+    {
+        $manager = $this->getManager();
+        $token = $this->getToken();
+
+        $object1 = new SomeObject(1);
+        $object2 = new SomeObject(2);
+
+        $manager->addObjectFieldPermission($object1, 'foo', $token, MaskBuilder::MASK_OWNER);
+        $manager->addObjectFieldPermission($object2, 'bar', $token, MaskBuilder::MASK_VIEW);
+        $this->assertTrue($manager->isGranted('OWNER', $object1, 'foo'));
+        $this->assertFalse($manager->isGranted('OWNER', $object2, 'foo'));
+        $this->assertFalse($manager->isGranted('VIEW', $object1, 'bar'));
+        $this->assertTrue($manager->isGranted('VIEW', $object2, 'bar'));
+
+        // overwrite
+        $manager->setObjectFieldPermission($object1, 'foo', $token, MaskBuilder::MASK_VIEW);
+        $manager->setObjectFieldPermission($object2, 'bar', $token, MaskBuilder::MASK_OWNER);
+        $this->assertFalse($manager->isGranted('OWNER', $object1, 'foo'));
+        $this->assertFalse($manager->isGranted('OWNER', $object2, 'foo'));
+        $this->assertFalse($manager->isGranted('VIEW', $object1, 'bar'));
+        $this->assertTrue($manager->isGranted('VIEW', $object2, 'bar'));
+    }
+
+    public function testRevokeOfObjectFieldPermission()
+    {
+        $manager = $this->getManager();
+        $token = $this->getToken();
+
+        $object1 = new SomeObject(1);
+        $object2 = new SomeObject(2);
+
+        $manager->addObjectFieldPermission($object1, 'foo', $token, MaskBuilder::MASK_OWNER);
+        $manager->addObjectFieldPermission($object2, 'bar', $token, MaskBuilder::MASK_VIEW);
+        $this->assertTrue($manager->isGranted('OWNER', $object1, 'foo'));
+        $this->assertFalse($manager->isGranted('OWNER', $object2, 'foo'));
+        $this->assertFalse($manager->isGranted('VIEW', $object1, 'bar'));
+        $this->assertTrue($manager->isGranted('VIEW', $object2, 'bar'));
+
+        // revoke
+        $manager->revokeObjectFieldPermission($object1, 'foo', $token, MaskBuilder::MASK_OWNER);
+        $manager->revokeObjectFieldPermission($object2, 'bar', $token, MaskBuilder::MASK_VIEW);
         $this->assertFalse($manager->isGranted('OWNER', $object1, 'foo'));
         $this->assertFalse($manager->isGranted('OWNER', $object2, 'foo'));
         $this->assertFalse($manager->isGranted('VIEW', $object1, 'bar'));

@@ -21,5 +21,7 @@ class OneupAclExtension extends Extension
         if (class_exists('Doctrine\ORM\EntityManager')) {
             $loader->load('orm.xml');
         }
+
+        $container->setParameter('oneup_acl.remove_orphans', $config['remove_orphans']);
     }
 }

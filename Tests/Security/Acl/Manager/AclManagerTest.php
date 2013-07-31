@@ -90,12 +90,12 @@ class AclManagerTest extends AbstractSecurityTest
         $object1 = new SomeObject(1);
         $object2 = new SomeObject(1);
 
-        $manager->addObjectPermission($object1, $token, MaskBuilder::MASK_OWNER);
+        $manager->addClassPermission($object1, $token, MaskBuilder::MASK_OWNER);
         $this->assertTrue($manager->isGranted('OWNER', $object1));
         $this->assertTrue($manager->isGranted('OWNER', $object2));
 
         // overwrite
-        $manager->setObjectPermission($object1, $token, MaskBuilder::MASK_VIEW);
+        $manager->setClassPermission($object1, $token, MaskBuilder::MASK_VIEW);
         $this->assertFalse($manager->isGranted('OWNER', $object1));
         $this->assertFalse($manager->isGranted('OWNER', $object2));
         $this->assertTrue($manager->isGranted('VIEW', $object1));

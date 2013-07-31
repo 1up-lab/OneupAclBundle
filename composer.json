@@ -1,7 +1,7 @@
 {
     "name": "oneup/acl-bundle",
     "type": "symfony-bundle",
-    "description": "The missing link between Symfony`s Acl implementation and your application..",
+    "description": "The missing link between Symfony`s Acl implementation and your application.",
     "keywords": ["symfony2", "acl", "security"],
     "homepage": "http://1up.io",
     "license": "MIT",
@@ -31,11 +31,13 @@
     "require-dev": {
         "symfony/finder": ">=2.0.16,<2.4-dev",
         "symfony/browser-kit": "2.*",
+        "sensio/framework-extra-bundle": "~2.2",
         "doctrine/orm": "~2.2",
         "phpunit/phpunit": "3.7.*"
     },
     
     "suggest": {
+        "sensio/framework-extra-bundle": "Allows to use controller annotations.",
         "doctrine/orm": "Allows to remove Acl entires of Doctrine entities automatically."
     },
     

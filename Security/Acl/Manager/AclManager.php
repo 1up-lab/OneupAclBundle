@@ -45,7 +45,7 @@ class AclManager implements AclManagerInterface
         $size = count($aces) - 1;
         reset($aces);
 
-        for ($i = $size; $i >= 0; $i --) {
+        for ($i = $size; $i >= 0; $i--) {
             $acl->deleteClassAce($i);
         }
 
@@ -60,7 +60,7 @@ class AclManager implements AclManagerInterface
         $size = count($aces) - 1;
         reset($aces);
 
-        for ($i = $size; $i >= 0; $i --) {
+        for ($i = $size; $i >= 0; $i--) {
             $acl->deleteObjectAce($i);
         }
 
@@ -109,7 +109,7 @@ class AclManager implements AclManagerInterface
         $size = count($aces) - 1;
         reset($aces);
 
-        for ($i = $size; $i >= 0; $i --) {
+        for ($i = $size; $i >= 0; $i--) {
             if ($securityIdentity->equals($aces[$i]->getSecurityIdentity())) {
                 $acl->deleteObjectAce($i);
             }
@@ -132,7 +132,7 @@ class AclManager implements AclManagerInterface
         $size = count($aces) - 1;
         reset($aces);
 
-        for ($i = $size; $i >= 0; $i --) {
+        for ($i = $size; $i >= 0; $i--) {
             if ($securityIdentity->equals($aces[$i]->getSecurityIdentity())) {
                 $acl->deleteClassAce($i);
             }
@@ -224,9 +224,12 @@ class AclManager implements AclManagerInterface
         $acl  = $this->getAclFor($object);
         $aces = $type == 'object' ? $acl->getObjectAces() : $acl->getClassAces();
 
-        foreach ($aces as $key => $ace) {
-            if ($securityIdentity->equals($ace->getSecurityIdentity())) {
-                $this->removeMask($key, $acl, $ace, $mask, $type);
+        $size = count($aces) - 1;
+        reset($aces);
+
+        for ($i = $size; $i >= 0; $i--) {
+            if ($securityIdentity->equals($aces[$i]->getSecurityIdentity())) {
+                $this->removeMask($i, $acl, $aces[$i], $mask, $type);
             }
         }
 

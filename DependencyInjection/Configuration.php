@@ -12,6 +12,12 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('oneup_acl');
 
+        $rootNode
+            ->children()
+                ->booleanNode('remove_orphans')->defaultTrue()->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 }

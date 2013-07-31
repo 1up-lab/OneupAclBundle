@@ -21,5 +21,11 @@ class OneupAclExtension extends Extension
         if (class_exists('Doctrine\ORM\EntityManager')) {
             $loader->load('orm.xml');
         }
+
+        if (class_exists('Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle')) {
+            $loader->load('configuration.xml');
+        }
+
+        $container->setParameter('oneup_acl.remove_orphans', $config['remove_orphans']);
     }
 }

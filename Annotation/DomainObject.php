@@ -8,5 +8,4 @@ namespace Oneup\AclBundle\Annotation;
  */
 class DomainObject
 {
-    public $removeAcl = true;
 }

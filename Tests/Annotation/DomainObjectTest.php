@@ -9,10 +9,12 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
 {
     public function testRemoveAclProperty()
     {
+        // this test is basically useless
+        // but the annotation wont autoload if
+        // we dont force it to do so.
+        // dont blame the messenger
         $annotation = new Acl\DomainObject();
-        $annotation->removeAcl = false;
-
-        $this->assertFalse($annotation->removeAcl);
+        $this->assertInstanceOf('Oneup\AclBundle\Annotation\DomainObject', $annotation);
     }
 
     public function testIfAnnotationIsLoadable()
@@ -26,6 +28,5 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $annotations);
         $this->assertInstanceOf('Oneup\AclBundle\Annotation\DomainObject', $objectIdentity);
-        $this->assertTrue($objectIdentity->removeAcl);
     }
 }

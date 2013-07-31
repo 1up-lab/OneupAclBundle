@@ -11,14 +11,19 @@ class AclRemoveListener
     protected $reader;
     protected $manager;
 
-    public function __construct(Reader $reader, AclManager $manager)
+    public function __construct($remove, Reader $reader, AclManager $manager)
     {
+        $this->remove = $remove;
         $this->reader = $reader;
         $this->manager = $manager;
     }
 
     public function preRemove(LifecycleEventArgs $event)
     {
+        if (!$this->remove) {
+            return;
+        }
+
         $entity = $event->getEntity();
         $object = new \ReflectionClass($entity);
 

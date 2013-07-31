@@ -1,13 +1,13 @@
 <?php
 
-namespace Oneup\AclBundle\Configuration;
+namespace Oneup\AclBundle\Annotation;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 
 /**
  * @Annotation
  */
-class AclPermission implements ConfigurationInterface
+class AclCheck implements ConfigurationInterface
 {
     protected $entries = array();
 

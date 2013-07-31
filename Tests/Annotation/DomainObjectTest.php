@@ -13,8 +13,11 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
         // but the annotation wont autoload if
         // we dont force it to do so.
         // dont blame the messenger
-        $annotation = new Acl\DomainObject();
-        $this->assertInstanceOf('Oneup\AclBundle\Annotation\DomainObject', $annotation);
+        $domainObject = new Acl\DomainObject();
+
+        $classPermission = new Acl\ClassPermissions(array());
+        $this->assertInstanceOf('Oneup\AclBundle\Annotation\DomainObject', $domainObject);
+        $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermissions', $classPermission);
     }
 
     public function testIfAnnotationIsLoadable()

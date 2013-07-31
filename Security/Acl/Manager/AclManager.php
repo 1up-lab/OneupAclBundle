@@ -9,6 +9,7 @@ use Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
+use Symfony\Component\Security\Acl\Voter\FieldVote;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
@@ -107,6 +108,45 @@ class AclManager implements AclManagerInterface
         $this->provider->updateAcl($acl);
     }
 
+    public function addClassFieldPermission($object, $field, $identity, $mask)
+    {
+        $this->addFieldPermission($object, $field, $identity, $mask, 'class');
+    }
+
+    public function setClassFieldPermission($object, $field, $identity, $mask)
+    {
+        $this->revokeClassFieldPermissions($object, $field, $identity);
+        $this->addFieldPermission($object, $field, $identity, $mask, 'class');
+    }
+
+    public function revokeClassFieldPermission($object, $field, $identity, $mask)
+    {
+        $this->revokeFieldPermission($object, $field, $identity, $mask, 'class');
+    }
+
+    public function revokeClassFieldPermissions($object, $field, $identity)
+    {
+        if (is_object($object)) {
+            $object = get_class($object);
+        }
+
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
+        $acl  = $this->getAclFor($object);
+        $fieldAces = $acl->getClassFieldAces($field);
+
+        $size = count($fieldAces) - 1;
+        reset($fieldAces);
+
+        for ($i = $size; $i >= 0; $i--) {
+            if ($securityIdentity->equals($fieldAces[$i]->getSecurityIdentity())) {
+                $acl->deleteClassFieldAce($i, $field);
+            }
+        }
+
+        $this->provider->updateAcl($acl);
+    }
+
     public function revokeAllObjectPermissions($object)
     {
         $acl  = $this->getAclFor($object);
@@ -177,11 +217,16 @@ class AclManager implements AclManagerInterface
         }
     }
 
-    public function isGranted($attributes, $object = null)
+    public function isGranted($attributes, $object = null, $field = null)
     {
         if (is_object($object)) {
             // preload acl
             $this->getAclFor($object);
+        }
+
+        if ($field) {
+            $oid = $this->createObjectIdentity($object);
+            $object = new FieldVote($oid, $field);
         }
 
         return $this->context->isGranted($attributes, $object);
@@ -218,7 +263,6 @@ class AclManager implements AclManagerInterface
             }
         }
 
-        $objectIdentity = $this->createObjectIdentity($object);
         $securityIdentity = $this->createSecurityIdentity($identity);
 
         $acl  = $this->getAclFor($object);
@@ -234,6 +278,42 @@ class AclManager implements AclManagerInterface
         }
 
         $this->provider->updateAcl($acl);
+    }
+
+    protected function revokeFieldPermission($object, $field, $identity, $mask, $type)
+    {
+        if ($type == 'class') {
+            if (is_object($object)) {
+                $object = get_class($object);
+            }
+        }
+
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
+        $acl  = $this->getAclFor($object);
+        $fieldAces = $type == 'object' ? $acl->getObjectFieldAces($field) : $acl->getClassFieldAces($field);
+
+        $size = count($fieldAces) - 1;
+        reset($fieldAces);
+
+        for ($i = $size; $i >= 0; $i--) {
+            if ($securityIdentity->equals($fieldAces[$i]->getSecurityIdentity())) {
+                $this->removeFieldMask($i, $field, $acl, $fieldAces[$i], $mask, $type);
+            }
+        }
+
+        $this->provider->updateAcl($acl);
+    }
+
+    protected function removeFieldMask($index, $field, $acl, $fieldAce, $mask, $type)
+    {
+        if ($type == 'object') {
+            $acl->updateObjectFieldAce($index, $field, $fieldAce->getMask() & ~$mask);
+        }
+
+        if ($type == 'class') {
+            $acl->updateClassFieldAce($index, $field, $fieldAce->getMask() & ~$mask);
+        }
     }
 
     protected function removeMask($index, $acl, $ace, $mask, $type)
@@ -285,6 +365,28 @@ class AclManager implements AclManagerInterface
             $acl->insertClassAce($securityIdentity, $mask);
         } else {
             throw new \InvalidArgumentException('This AceType is not valid.');
+        }
+
+        $this->provider->updateAcl($acl);
+    }
+
+    protected function addFieldPermission($object, $field, $identity, $mask, $type)
+    {
+        if ($type == 'class') {
+            if (is_object($object)) {
+                $object = get_class($object);
+            }
+        }
+
+        $securityIdentity = $this->createSecurityIdentity($identity);
+        $acl = $this->getAclFor($object);
+
+        if ($type == 'object') {
+            $acl->insertObjectFieldAce($field, $securityIdentity, $mask);
+        } elseif ($type == 'class') {
+            $acl->insertClassFieldAce($field, $securityIdentity, $mask);
+        } else {
+            throw new \InvalidArgumentException('This AceType is not valid');
         }
 
         $this->provider->updateAcl($acl);

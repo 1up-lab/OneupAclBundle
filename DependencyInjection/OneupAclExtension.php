@@ -22,6 +22,10 @@ class OneupAclExtension extends Extension
             $loader->load('orm.xml');
         }
 
+        if (class_exists('Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle')) {
+            $loader->load('configuration.xml');
+        }
+
         $container->setParameter('oneup_acl.remove_orphans', $config['remove_orphans']);
     }
 }

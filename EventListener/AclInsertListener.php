@@ -6,32 +6,31 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Oneup\AclBundle\Security\Acl\Manager\AclManager;
 
-class AclRemoveListener
+class AclInsertListener
 {
     protected $reader;
     protected $manager;
 
-    public function __construct($remove, Reader $reader, AclManager $manager)
+    public function __construct(Reader $reader, AclManager $manager)
     {
         $this->remove = $remove;
         $this->reader = $reader;
         $this->manager = $manager;
     }
 
-    public function preRemove(LifecycleEventArgs $event)
+    public function postPersist(LifecycleEventArgs $event)
     {
-        if (!$this->remove) {
-            return;
-        }
-
         $entity = $event->getEntity();
         $object = new \ReflectionClass($entity);
 
         $annotation = $this->reader->getClassAnnotation($object, 'Oneup\AclBundle\Annotation\DomainObject');
 
-        if ($annotation && ($annotation->getRemove() && $this->remove)) {
-            $this->manager->revokeAllObjectPermissions($entity);
-            $this->manager->revokeAllObjectFieldPermissions($entity);
+        if ($annotation) {
+            foreach ($annotation->getClassPermissions() as $classPermission) {
+                foreach ($classPermission->getRoles() as $role => $mask) {
+                    $this->manager->addClassPermission($entity, $role, $mask);
+                }
+            }
         }
     }
 }

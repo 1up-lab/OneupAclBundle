@@ -37,8 +37,8 @@
     },
     
     "suggest": {
-        "sensio/framework-extra-bundle": "Allows to use controller annotations.",
-        "doctrine/orm": "Allows to remove Acl entires of Doctrine entities automatically."
+        "sensio/framework-extra-bundle": "Allows you to use controller annotations.",
+        "doctrine/orm": "Allows you to remove Acl entries automatically."
     },
     
     "autoload": {

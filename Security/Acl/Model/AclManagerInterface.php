@@ -16,9 +16,9 @@ interface AclManagerInterface
     public function setClassFieldPermission($object, $field, $identity, $mask);
     public function revokeClassFieldPermission($object, $field, $identity, $mask);
 
-//    public function addObjectFieldPermission($field, $identity, $mask);
-//    public function setObjectFieldPermission($field, $identity, $mask);
-//    public function revokeObjectFieldPermission($field, $identity, $mask);
+    public function addObjectFieldPermission($object, $field, $identity, $mask);
+    public function setObjectFieldPermission($object, $field, $identity, $mask);
+    public function revokeObjectFieldPermission($object, $field, $identity, $mask);
 
     public function revokeObjectPermissions($object, $identity);
     public function revokeClassPermissions($object, $identity);

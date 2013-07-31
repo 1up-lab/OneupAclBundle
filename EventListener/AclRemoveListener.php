@@ -30,7 +30,7 @@ class AclRemoveListener
         $annotation = $this->reader->getClassAnnotation($object, 'Oneup\AclBundle\Annotation\DomainObject');
 
         if ($annotation && $annotation->removeAcl) {
-            $this->manager->removeObjectPermissions($entity);
+            $this->manager->removeAllObjectPermissions($entity);
         }
     }
 }

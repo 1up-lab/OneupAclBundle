@@ -11,9 +11,29 @@ use Oneup\AclBundle\Tests\Model\SomeObject;
 class TestController extends Controller
 {
     /**
-     * @AclCheck({ "one" = 'VIEW'})
+     * @AclCheck({ "one" = "VIEW" })
      */
     public function oneAction(SomeObject $one)
+    {
+        // ...
+    }
+    
+    /**
+     * @AclCheck({
+     *   "one" = "VIEW",
+     *   "two" = "VIEW"
+     *  })
+     */
+    public function twoAction(SomeObject $one)
+    {
+        // ...
+    }
+
+    /**
+     * @AclCheck({ "one" = "VIEW" })
+     * @AclCheck({ "two" = "VIEW" })
+     */
+    public function threeAction(SomeObject $one, SomeObject $two)
     {
         // ...
     }

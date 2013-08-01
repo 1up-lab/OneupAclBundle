@@ -94,4 +94,44 @@ class PermissionListenerTest extends AbstractSecurityTest
 
         $this->listener->onKernelController($event);
     }
+    
+    public function testMultiplePermissionInSingleAnnotation()
+    {
+        $object1 = new SomeObject(1);
+        $object2 = new SomeObject(2);
+        $this->manager->addObjectPermission($object1, $this->getToken(), MaskBuilder::MASK_VIEW);
+        $this->manager->addObjectPermission($object1, $this->getToken(), MaskBuilder::MASK_VIEW);
+
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\FilterControllerEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->any())
+            ->method('getController')
+            ->will($this->returnValue(array(
+                new TestController,
+                'twoAction'
+            )))
+        ;
+
+        $checks = array(
+            new AclCheck(array('value' => array(
+                'one' => 'VIEW',
+                'two' => 'VIEW'
+            )))
+        );
+
+        $request = new Request(array(), array(), array(
+            '_acl_permission' => $checks,
+            'one' => $object1,
+            'two' => $object2
+        ));
+
+        $event->expects($this->any())
+            ->method('getRequest')
+            ->will($this->returnValue($request))
+        ;
+
+        $this->listener->onKernelController($event);
+    }
 }

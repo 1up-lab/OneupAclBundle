@@ -6,11 +6,11 @@ use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
 
 class AclManagerClassFieldPermissionTest extends AbstractSecurityTest
 {
-    public function testAddOfClassFieldPermission()
+    public function testGrantOfClassFieldPermission()
     {
-        // add permission to class
-        $this->manager->addClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
-        $this->manager->addClassFieldPermission($this->object1, 'bar', $this->token, $this->mask2);
+        // grant permission to class
+        $this->manager->grantClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
+        $this->manager->grantClassFieldPermission($this->object1, 'bar', $this->token, $this->mask2);
 
         // test object1
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1, 'foo'));
@@ -33,9 +33,9 @@ class AclManagerClassFieldPermissionTest extends AbstractSecurityTest
 
     public function testSetOfClassFieldPermission()
     {
-        // add permission to class
-        $this->manager->addClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
-        $this->manager->addClassFieldPermission($this->object1, 'bar', $this->token, $this->mask2);
+        // grant permission to class
+        $this->manager->grantClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
+        $this->manager->grantClassFieldPermission($this->object1, 'bar', $this->token, $this->mask2);
 
         // test objects
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1, 'foo'));
@@ -56,8 +56,8 @@ class AclManagerClassFieldPermissionTest extends AbstractSecurityTest
 
     public function testRevokeOfClassFieldPermission()
     {
-        // add permission to class
-        $this->manager->addClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
+        // grant permission to class
+        $this->manager->grantClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
 
         // test object
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1, 'foo'));
@@ -77,9 +77,9 @@ class AclManagerClassFieldPermissionTest extends AbstractSecurityTest
 
     public function testRevokeOfClassFieldPermissions()
     {
-        // add permission to class
-        $this->manager->addClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
-        $this->manager->addClassFieldPermission($this->object1, 'bar', $this->token, $this->mask2);
+        // grant permission to class
+        $this->manager->grantClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
+        $this->manager->grantClassFieldPermission($this->object1, 'bar', $this->token, $this->mask2);
 
         // test object
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1, 'foo'));
@@ -101,9 +101,9 @@ class AclManagerClassFieldPermissionTest extends AbstractSecurityTest
 
     public function testRevokeOfAllClassFieldPermissions()
     {
-        // add permission to class
-        $this->manager->addClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
-        $this->manager->addClassFieldPermission($this->object1, 'bar', $this->token, $this->mask2);
+        // grant permission to class
+        $this->manager->grantClassFieldPermission($this->object1, 'foo', $this->token, $this->mask1);
+        $this->manager->grantClassFieldPermission($this->object1, 'bar', $this->token, $this->mask2);
 
         // test object
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1, 'foo'));

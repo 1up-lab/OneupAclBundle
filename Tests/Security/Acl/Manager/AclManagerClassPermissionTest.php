@@ -6,10 +6,10 @@ use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
 
 class AclManagerClassPermissionTest extends AbstractSecurityTest
 {
-    public function testAddOfClassPermission()
+    public function testGrantOfClassPermission()
     {
-        // add permission to class
-        $this->manager->addClassPermission($this->object1, $this->token, $this->mask1);
+        // grant permission to class
+        $this->manager->grantClassPermission($this->object1, $this->token, $this->mask1);
 
         // test object1
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));
@@ -28,8 +28,8 @@ class AclManagerClassPermissionTest extends AbstractSecurityTest
 
     public function testSetOfClassPermission()
     {
-        // add permission to class
-        $this->manager->addClassPermission($this->object1, $this->token, $this->mask1);
+        // grant permission to class
+        $this->manager->grantClassPermission($this->object1, $this->token, $this->mask1);
 
         // test objects
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));
@@ -47,8 +47,8 @@ class AclManagerClassPermissionTest extends AbstractSecurityTest
 
     public function testRevokeOfClassPermission()
     {
-        // add permission to class
-        $this->manager->addClassPermission($this->object1, $this->token, $this->mask1);
+        // grant permission to class
+        $this->manager->grantClassPermission($this->object1, $this->token, $this->mask1);
 
         // test objects
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));
@@ -64,9 +64,9 @@ class AclManagerClassPermissionTest extends AbstractSecurityTest
 
     public function testRevokeOfClassPermissions()
     {
-        // add permission to class
-        $this->manager->addClassPermission($this->object1, $this->token, $this->mask1);
-        $this->manager->addClassPermission($this->object1, $this->token, $this->mask2);
+        // grant permission to class
+        $this->manager->grantClassPermission($this->object1, $this->token, $this->mask1);
+        $this->manager->grantClassPermission($this->object1, $this->token, $this->mask2);
 
         // test object
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));
@@ -88,9 +88,9 @@ class AclManagerClassPermissionTest extends AbstractSecurityTest
 
     public function testRevokeOfAllClassPermissions()
     {
-        // add permission to class
-        $this->manager->addClassPermission($this->object1, $this->token, $this->mask1);
-        $this->manager->addClassPermission($this->object1, $this->token, $this->mask2);
+        // grant permission to class
+        $this->manager->grantClassPermission($this->object1, $this->token, $this->mask1);
+        $this->manager->grantClassPermission($this->object1, $this->token, $this->mask2);
 
         // test object
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));

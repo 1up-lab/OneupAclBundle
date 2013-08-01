@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 
 /**
  * @Annotation
+ * @Target({"METHOD"})
  */
 class AclCheck implements ConfigurationInterface
 {

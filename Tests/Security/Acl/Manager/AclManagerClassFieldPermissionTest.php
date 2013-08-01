@@ -2,50 +2,10 @@
 
 namespace Oneup\AclBundle\Tests\Security\Acl\Manager;
 
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
-use Oneup\AclBundle\Tests\Model\SomeObject;
 
 class AclManagerClassFieldPermissionTest extends AbstractSecurityTest
 {
-    protected $manager;
-    protected $token;
-
-    private $object1;
-    private $object2;
-
-    private $mask1;
-    private $mask2;
-
-    /**
-     * basic setup
-     */
-    public function __construct()
-    {
-        $this->manager = $this->getManager();
-        $this->token = $this->getToken();
-
-        $this->object1 = new SomeObject(1);
-        $this->object2 = new SomeObject(2);
-
-        $builder1 = new MaskBuilder();
-        $builder1
-            ->add('view')
-            ->add('create')
-            ->add('edit')
-        ;
-
-        $this->mask1 = $builder1->get();
-
-        $builder2 = new MaskBuilder();
-        $builder2
-            ->add('delete')
-            ->add('undelete')
-        ;
-
-        $this->mask2 = $builder2->get();
-    }
-
     public function testAddOfClassFieldPermission()
     {
         // add permission to class

@@ -22,14 +22,28 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testIfAnnotationIsLoadable()
     {
+        $annotations = $this->getDomainObjectAnnotations();
+
+        $this->assertCount(1, $annotations);
+        $this->assertInstanceOf('Oneup\AclBundle\Annotation\DomainObject', $annotations[0]);
+    }
+
+    public function testIfNestingAnnotationsWorks()
+    {
+        list($annotation) = $this->getDomainObjectAnnotations();
+        $classPermissions = $annotation->getClassPermissions();
+
+        $this->assertCount(1, $classPermissions);
+        $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermissions', $classPermissions[0]);
+    }
+
+    protected function getDomainObjectAnnotations()
+    {
         $reader = new SimpleAnnotationReader();
         $reader->addNamespace('Oneup\AclBundle\Annotation');
 
         $object = new \ReflectionClass('Oneup\AclBundle\Tests\Model\SomeObject');
-        $annotations = $reader->getClassAnnotations($object);
-        $objectIdentity = $annotations[0];
 
-        $this->assertCount(1, $annotations);
-        $this->assertInstanceOf('Oneup\AclBundle\Annotation\DomainObject', $objectIdentity);
+        return $reader->getClassAnnotations($object);
     }
 }

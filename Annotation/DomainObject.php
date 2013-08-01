@@ -38,6 +38,6 @@ class DomainObject
 
     public function getClassPermissions()
     {
-        return $this->classPermission;
+        return $this->classPermissions;
     }
 }

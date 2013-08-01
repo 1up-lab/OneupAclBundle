@@ -26,31 +26,15 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->addPermission($object, $identity, $mask, 'object');
     }
 
-    public function revokeObjectPermission($object, $identity, $mask)
-    {
-        $this->revokePermission($object, $identity, $mask, 'object');
-    }
-
     public function setObjectPermission($object, $identity, $mask)
     {
         $this->revokeObjectPermissions($object, $identity);
         $this->addPermission($object, $identity, $mask, 'object');
     }
 
-    public function addClassPermission($object, $identity, $mask)
+    public function revokeObjectPermission($object, $identity, $mask)
     {
-        $this->addPermission($object, $identity, $mask, 'class');
-    }
-
-    public function revokeClassPermission($object, $identity, $mask)
-    {
-        $this->revokePermission($object, $identity, $mask, 'class');
-    }
-
-    public function setClassPermission($object, $identity, $mask)
-    {
-        $this->revokeClassPermissions($object, $identity);
-        $this->addPermission($object, $identity, $mask, 'class');
+        $this->revokePermission($object, $identity, $mask, 'object');
     }
 
     public function revokeObjectPermissions($object, $identity)
@@ -72,43 +56,19 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    public function revokeClassPermissions($object, $identity)
+    public function revokeAllObjectPermissions($object)
     {
-        if (is_object($object)) {
-            $object = get_class($object);
-        }
-
-        $securityIdentity = $this->createSecurityIdentity($identity);
-
         $acl  = $this->getAclFor($object);
-        $aces = $acl->getClassAces();
+        $aces = $acl->getObjectAces();
 
         $size = count($aces) - 1;
         reset($aces);
 
         for ($i = $size; $i >= 0; $i--) {
-            if ($securityIdentity->equals($aces[$i]->getSecurityIdentity())) {
-                $acl->deleteClassAce($i);
-            }
+            $acl->deleteObjectAce($i);
         }
 
         $this->getProvider()->updateAcl($acl);
-    }
-
-    public function addClassFieldPermission($object, $field, $identity, $mask)
-    {
-        $this->addFieldPermission($object, $field, $identity, $mask, 'class');
-    }
-
-    public function setClassFieldPermission($object, $field, $identity, $mask)
-    {
-        $this->revokeClassFieldPermissions($object, $field, $identity);
-        $this->addFieldPermission($object, $field, $identity, $mask, 'class');
-    }
-
-    public function revokeClassFieldPermission($object, $field, $identity, $mask)
-    {
-        $this->revokeFieldPermission($object, $field, $identity, $mask, 'class');
     }
 
     public function addObjectFieldPermission($object, $field, $identity, $mask)
@@ -127,29 +87,6 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->revokeFieldPermission($object, $field, $identity, $mask, 'object');
     }
 
-    public function revokeClassFieldPermissions($object, $field, $identity)
-    {
-        if (is_object($object)) {
-            $object = get_class($object);
-        }
-
-        $securityIdentity = $this->createSecurityIdentity($identity);
-
-        $acl  = $this->getAclFor($object);
-        $fieldAces = $acl->getClassFieldAces($field);
-
-        $size = count($fieldAces) - 1;
-        reset($fieldAces);
-
-        for ($i = $size; $i >= 0; $i--) {
-            if ($securityIdentity->equals($fieldAces[$i]->getSecurityIdentity())) {
-                $acl->deleteClassFieldAce($i, $field);
-            }
-        }
-
-        $this->getProvider()->updateAcl($acl);
-    }
-
     public function revokeObjectFieldPermissions($object, $field, $identity)
     {
         $securityIdentity = $this->createSecurityIdentity($identity);
@@ -164,21 +101,6 @@ abstract class AbstractAclManager implements AclManagerInterface
             if ($securityIdentity->equals($fieldAces[$i]->getSecurityIdentity())) {
                 $acl->deleteObjectFieldAce($i, $field);
             }
-        }
-
-        $this->getProvider()->updateAcl($acl);
-    }
-
-    public function revokeAllObjectPermissions($object)
-    {
-        $acl  = $this->getAclFor($object);
-        $aces = $acl->getObjectAces();
-
-        $size = count($aces) - 1;
-        reset($aces);
-
-        for ($i = $size; $i >= 0; $i--) {
-            $acl->deleteObjectAce($i);
         }
 
         $this->getProvider()->updateAcl($acl);
@@ -206,6 +128,45 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
+    public function addClassPermission($object, $identity, $mask)
+    {
+        $this->addPermission($object, $identity, $mask, 'class');
+    }
+
+    public function setClassPermission($object, $identity, $mask)
+    {
+        $this->revokeClassPermissions($object, $identity);
+        $this->addPermission($object, $identity, $mask, 'class');
+    }
+
+    public function revokeClassPermission($object, $identity, $mask)
+    {
+        $this->revokePermission($object, $identity, $mask, 'class');
+    }
+
+    public function revokeClassPermissions($object, $identity)
+    {
+        if (is_object($object)) {
+            $object = get_class($object);
+        }
+
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
+        $acl  = $this->getAclFor($object);
+        $aces = $acl->getClassAces();
+
+        $size = count($aces) - 1;
+        reset($aces);
+
+        for ($i = $size; $i >= 0; $i--) {
+            if ($securityIdentity->equals($aces[$i]->getSecurityIdentity())) {
+                $acl->deleteClassAce($i);
+            }
+        }
+
+        $this->getProvider()->updateAcl($acl);
+    }
+
     public function revokeAllClassPermissions($object)
     {
         if (is_object($object)) {
@@ -220,6 +181,45 @@ abstract class AbstractAclManager implements AclManagerInterface
 
         for ($i = $size; $i >= 0; $i--) {
             $acl->deleteClassAce($i);
+        }
+
+        $this->getProvider()->updateAcl($acl);
+    }
+
+    public function addClassFieldPermission($object, $field, $identity, $mask)
+    {
+        $this->addFieldPermission($object, $field, $identity, $mask, 'class');
+    }
+
+    public function setClassFieldPermission($object, $field, $identity, $mask)
+    {
+        $this->revokeClassFieldPermissions($object, $field, $identity);
+        $this->addFieldPermission($object, $field, $identity, $mask, 'class');
+    }
+
+    public function revokeClassFieldPermission($object, $field, $identity, $mask)
+    {
+        $this->revokeFieldPermission($object, $field, $identity, $mask, 'class');
+    }
+
+    public function revokeClassFieldPermissions($object, $field, $identity)
+    {
+        if (is_object($object)) {
+            $object = get_class($object);
+        }
+
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
+        $acl  = $this->getAclFor($object);
+        $fieldAces = $acl->getClassFieldAces($field);
+
+        $size = count($fieldAces) - 1;
+        reset($fieldAces);
+
+        for ($i = $size; $i >= 0; $i--) {
+            if ($securityIdentity->equals($fieldAces[$i]->getSecurityIdentity())) {
+                $acl->deleteClassFieldAce($i, $field);
+            }
         }
 
         $this->getProvider()->updateAcl($acl);
@@ -250,7 +250,7 @@ abstract class AbstractAclManager implements AclManagerInterface
     public function isGranted($attributes, $object = null, $field = null)
     {
         if (is_object($object)) {
-            // preload acl
+            // pre-load acl
             $this->getAclFor($object);
         }
 
@@ -335,17 +335,6 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    protected function removeFieldMask($index, $field, $acl, $fieldAce, $mask, $type)
-    {
-        if ($type == 'object') {
-            $acl->updateObjectFieldAce($index, $field, $fieldAce->getMask() & ~$mask);
-        }
-
-        if ($type == 'class') {
-            $acl->updateClassFieldAce($index, $field, $fieldAce->getMask() & ~$mask);
-        }
-    }
-
     protected function removeMask($index, $acl, $ace, $mask, $type)
     {
         if ($type == 'object') {
@@ -354,6 +343,17 @@ abstract class AbstractAclManager implements AclManagerInterface
 
         if ($type == 'class') {
             $acl->updateClassAce($index, $ace->getMask() & ~$mask);
+        }
+    }
+
+    protected function removeFieldMask($index, $field, $acl, $fieldAce, $mask, $type)
+    {
+        if ($type == 'object') {
+            $acl->updateObjectFieldAce($index, $field, $fieldAce->getMask() & ~$mask);
+        }
+
+        if ($type == 'class') {
+            $acl->updateClassFieldAce($index, $field, $fieldAce->getMask() & ~$mask);
         }
     }
 

@@ -10,7 +10,6 @@ class AclManagerTest extends AbstractSecurityTest
 {
     public function testIfTokenIsGrantedByGroup()
     {
-        $currentToken = $this->getToken();
         $adminToken = $this->createToken(array('ROLE_ADMIN'));
         $manager = $this->getManager();
 
@@ -22,59 +21,6 @@ class AclManagerTest extends AbstractSecurityTest
         // set token to admin token and try again
         $this->container->get('security.context')->setToken($adminToken);
         $this->assertTrue($manager->isGranted('VIEW', $object));
-    }
-
-    public function testAddOfObjectPermission()
-    {
-        $manager = $this->getManager();
-        $token = $this->getToken();
-
-        $object = new SomeObject(1);
-
-        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
-
-        $this->assertTrue($manager->isGranted('OWNER', $object));
-        $this->assertTrue($manager->isGranted('VIEW', $object));
-        $this->assertTrue($manager->isGranted('EDIT', $object));
-        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object));
-
-        $object = new SomeObject(2);
-
-        $this->assertFalse($manager->isGranted('OWNER', $object));
-        $this->assertFalse($manager->isGranted('VIEW', $object));
-        $this->assertFalse($manager->isGranted('EDIT', $object));
-        $this->assertFalse($manager->isGranted('NOT_EXISTENT', $object));
-    }
-
-    public function testSetOfObjectPermission()
-    {
-        $manager = $this->getManager();
-        $token = $this->getToken();
-
-        $object = new SomeObject(1);
-
-        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
-        $this->assertTrue($manager->isGranted('OWNER', $object));
-
-        // overwrite
-        $manager->setObjectPermission($object, $token, MaskBuilder::MASK_VIEW);
-        $this->assertFalse($manager->isGranted('OWNER', $object));
-        $this->assertTrue($manager->isGranted('VIEW', $object));
-    }
-
-    public function testRevokeOfObjectPermission()
-    {
-        $manager = $this->getManager();
-        $token = $this->getToken();
-
-        $object = new SomeObject(1);
-
-        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
-        $this->assertTrue($manager->isGranted('OWNER', $object));
-
-        // revoke
-        $manager->revokeObjectPermission($object, $token, MaskBuilder::MASK_OWNER);
-        $this->assertFalse($manager->isGranted('OWNER', $object));
     }
 
     public function testAddOfClassPermission()
@@ -136,24 +82,6 @@ class AclManagerTest extends AbstractSecurityTest
         $manager->revokeClassPermission($object1, $token, MaskBuilder::MASK_OWNER);
         $this->assertFalse($manager->isGranted('OWNER', $object1));
         $this->assertFalse($manager->isGranted('OWNER', $object2));
-    }
-
-    public function testRevokeOfObjectPermissions()
-    {
-        $manager = $this->getManager();
-        $token = $this->getToken();
-
-        $object = new SomeObject(1);
-
-        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_DELETE);
-        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_UNDELETE);
-        $this->assertTrue($manager->isGranted('DELETE', $object));
-        $this->assertTrue($manager->isGranted('UNDELETE', $object));
-
-        // revoke
-        $manager->revokeObjectPermissions($object, $token);
-        $this->assertFalse($manager->isGranted('DELETE', $object));
-        $this->assertFalse($manager->isGranted('UNDELETE', $object));
     }
 
     public function testRevokeOfClassPermissions()
@@ -249,24 +177,6 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertFalse($manager->isGranted('UNDELETE', $object1));
         $this->assertFalse($manager->isGranted('DELETE', $object2));
         $this->assertFalse($manager->isGranted('UNDELETE', $object2));
-    }
-
-    public function testRevokeOfAllObjectPermissions()
-    {
-        $manager = $this->getManager();
-        $token = $this->getToken();
-
-        $object = new SomeObject(1);
-
-        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_DELETE);
-        $manager->addObjectPermission($object, $token, MaskBuilder::MASK_UNDELETE);
-        $this->assertTrue($manager->isGranted('DELETE', $object));
-        $this->assertTrue($manager->isGranted('UNDELETE', $object));
-
-        // revoke
-        $manager->revokeAllObjectPermissions($object);
-        $this->assertFalse($manager->isGranted('DELETE', $object));
-        $this->assertFalse($manager->isGranted('UNDELETE', $object));
     }
 
     public function testAddOfClassFieldPermission()

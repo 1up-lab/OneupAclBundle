@@ -40,7 +40,7 @@ class PermissionListenerTest extends AbstractSecurityTest
             ->method('getController')
             ->will($this->returnValue(array(
                 new TestController,
-                'indexAction'
+                'oneAction'
             )))
         ;
 
@@ -74,7 +74,7 @@ class PermissionListenerTest extends AbstractSecurityTest
             ->method('getController')
             ->will($this->returnValue(array(
                 new TestController,
-                'indexAction'
+                'oneAction'
             )))
         ;
 

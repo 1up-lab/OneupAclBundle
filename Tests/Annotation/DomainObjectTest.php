@@ -14,8 +14,8 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
         // we dont force it to do so.
         // dont blame the messenger
         $domainObject = new Acl\DomainObject();
-
         $classPermission = new Acl\ClassPermissions(array());
+
         $this->assertInstanceOf('Oneup\AclBundle\Annotation\DomainObject', $domainObject);
         $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermissions', $classPermission);
     }

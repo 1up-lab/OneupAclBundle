@@ -11,7 +11,7 @@ use Oneup\AclBundle\Tests\Model\SomeObject;
 class TestController extends Controller
 {
     /**
-     * @AclCheck({ "one" = MaskBuilder::MASK_VIEW})
+     * @AclCheck({ "one" = 'VIEW'})
      */
     public function oneAction(SomeObject $one)
     {

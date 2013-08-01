@@ -39,6 +39,11 @@ class PermissionListener implements EventSubscriberInterface
 
             $name = $param->getName();
             $object = $request->get($name);
+
+            if (is_null($object)) {
+                continue;
+            }
+
             $mask = null;
 
             foreach ($configuration as $config) {

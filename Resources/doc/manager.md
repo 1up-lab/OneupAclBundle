@@ -54,4 +54,30 @@ $manager = $this->get('oneup_acl.manager');
 $manager->isGranted('ROLE_ADMIN');
 ```
 
-The previous example has nothing to do with Acl, so bring some more magic in!
+More interesting is the usage of Acl features. You can check permissions on domain objects like this:
+
+```php
+// retrieve a product from the database
+$product = $repository->find(1);
+
+// check if the current logged in user has the permission to view the product
+$manager = $this->get('oneup_acl.manager');
+$manager->isGranted('VIEW', $product);
+```
+
+## Add and revoke permissions
+
+The OneupAclBundle supports for types of permissions (object-, class-, object field- and class field permissions). All of them are represented with similar methods in the `AclManager`.
+
+* `add*Permission`: Add a new permission entry. If no Acl for the given domain object exists, it will be created.
+* `set*Permission`: Overwrite existing Acl entries with the given `SecurityIdentity` and mask.
+* `revoke*Permission`: Revoke the Ace matching the triple "object", "identity" and "mask".
+* `revoke*Permissions`: Revoke all entires for a given `SecurityIdentity` and object.
+* `revokeAll*Permissions`: Revoke all entries associated with the given object.
+
+## The parameters
+
+* `object`: Your domain object to apply a permission on. It should implement a `getId` method which returns a unique id.
+* `identity`: A `SecurityIdentity`. This is either a [Token](api.symfony.com/2.3/Symfony/Component/Security/Core/Authentication/Token.html), a [User](http://api.symfony.com/2.3/Symfony/Component/Security/Core/User/UserInterface.html), a [Role](http://api.symfony.com/2.3/Symfony/Component/Security/Core/Role/Role.html) or a string representing a Role.
+* `mask`: An integer representing a permission mask. You can use Symfony`s [MaskBuilder](http://api.symfony.com/2.3/Symfony/Component/Security/Acl/Permission/MaskBuilder.html) to create a mask.
+* `field`: The name of a property to apply the permission to.

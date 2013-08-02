@@ -63,5 +63,6 @@ $manager->isGranted('ROLE_ADMIN', $object);
 After installing and setting up the basic functionality of this bundle you can move on and use some more advanced
 features.
 
+* [Configure auto removal of Acl entries](doctrine.md#the-removelistener)
 * [Configuration reference](configuration_reference.md)
 * [Testing the bundle](testing.md)

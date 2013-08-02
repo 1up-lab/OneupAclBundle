@@ -10,7 +10,6 @@ To active the automatic permission check, use the following annotation:
 namespace Acme\DemoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Oneup\AclBundle\Annotation as Acl;
 
 class TestController extends Controller

@@ -10,7 +10,7 @@ class AclManagerTest extends AbstractSecurityTest
     {
         $adminToken = $this->createToken(array('ROLE_ADMIN'));
 
-        $this->manager->grantObjectPermission($this->object1, 'ROLE_ADMIN', $this->mask1);
+        $this->manager->addObjectPermission($this->object1, 'ROLE_ADMIN', $this->mask1);
         $this->assertFalse($this->manager->isGranted('VIEW', $this->object1));
         $this->assertFalse($this->manager->isGranted('CREATE', $this->object1));
         $this->assertFalse($this->manager->isGranted('EDIT', $this->object1));

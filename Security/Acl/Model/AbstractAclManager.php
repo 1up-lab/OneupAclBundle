@@ -21,15 +21,15 @@ abstract class AbstractAclManager implements AclManagerInterface
     abstract protected function getSecurityContext();
     abstract protected function getObjectIdentityStrategy();
 
-    public function grantObjectPermission($object, $identity, $mask)
+    public function addObjectPermission($object, $identity, $mask)
     {
-        $this->grantPermission($object, $identity, $mask, 'object');
+        $this->addPermission($object, $identity, $mask, 'object');
     }
 
     public function setObjectPermission($object, $identity, $mask)
     {
         $this->revokeObjectPermissions($object, $identity);
-        $this->grantPermission($object, $identity, $mask, 'object');
+        $this->addPermission($object, $identity, $mask, 'object');
     }
 
     public function revokeObjectPermission($object, $identity, $mask)
@@ -71,15 +71,15 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    public function grantObjectFieldPermission($object, $field, $identity, $mask)
+    public function addObjectFieldPermission($object, $field, $identity, $mask)
     {
-        $this->grantFieldPermission($object, $field, $identity, $mask, 'object');
+        $this->addFieldPermission($object, $field, $identity, $mask, 'object');
     }
 
     public function setObjectFieldPermission($object, $field, $identity, $mask)
     {
         $this->revokeObjectFieldPermissions($object, $field, $identity);
-        $this->grantFieldPermission($object, $field, $identity, $mask, 'object');
+        $this->addFieldPermission($object, $field, $identity, $mask, 'object');
     }
 
     public function revokeObjectFieldPermission($object, $field, $identity, $mask)
@@ -128,15 +128,15 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    public function grantClassPermission($object, $identity, $mask)
+    public function addClassPermission($object, $identity, $mask)
     {
-        $this->grantPermission($object, $identity, $mask, 'class');
+        $this->addPermission($object, $identity, $mask, 'class');
     }
 
     public function setClassPermission($object, $identity, $mask)
     {
         $this->revokeClassPermissions($object, $identity);
-        $this->grantPermission($object, $identity, $mask, 'class');
+        $this->addPermission($object, $identity, $mask, 'class');
     }
 
     public function revokeClassPermission($object, $identity, $mask)
@@ -186,15 +186,15 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    public function grantClassFieldPermission($object, $field, $identity, $mask)
+    public function addClassFieldPermission($object, $field, $identity, $mask)
     {
-        $this->grantFieldPermission($object, $field, $identity, $mask, 'class');
+        $this->addFieldPermission($object, $field, $identity, $mask, 'class');
     }
 
     public function setClassFieldPermission($object, $field, $identity, $mask)
     {
         $this->revokeClassFieldPermissions($object, $field, $identity);
-        $this->grantFieldPermission($object, $field, $identity, $mask, 'class');
+        $this->addFieldPermission($object, $field, $identity, $mask, 'class');
     }
 
     public function revokeClassFieldPermission($object, $field, $identity, $mask)
@@ -378,7 +378,7 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    protected function grantPermission($object, $identity, $mask, $type)
+    protected function addPermission($object, $identity, $mask, $type)
     {
         if ($type == 'class') {
             if (is_object($object)) {
@@ -400,7 +400,7 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    protected function grantFieldPermission($object, $field, $identity, $mask, $type)
+    protected function addFieldPermission($object, $field, $identity, $mask, $type)
     {
         if ($type == 'class') {
             if (is_object($object)) {

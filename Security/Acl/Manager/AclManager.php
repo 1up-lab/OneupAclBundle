@@ -65,7 +65,7 @@ class AclManager extends AbstractAclManager
 
         if (!is_null($mask)) {
             $grant ?
-                $this->grantPermission($object, $identity, $mask, $type) :
+                $this->addPermission($object, $identity, $mask, $type) :
                 $this->revokePermission($object, $identity, $mask, $type)
             ;
         } else {

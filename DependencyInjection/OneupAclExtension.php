@@ -6,6 +6,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Security\Acl\Domain\PermissionGrantingStrategy;
 
 class OneupAclExtension extends Extension
 {
@@ -26,6 +27,13 @@ class OneupAclExtension extends Extension
             $loader->load('configuration.xml');
         }
 
+        $strategy = constant(
+            sprintf('Symfony\Component\Security\Acl\Domain\PermissionGrantingStrategy::%s',
+                strtoupper($config['permission_strategy'])
+            )
+        );
+
         $container->setParameter('oneup_acl.remove_orphans', $config['remove_orphans']);
+        $container->setParameter('oneup_acl.permission_strategy', $strategy);
     }
 }

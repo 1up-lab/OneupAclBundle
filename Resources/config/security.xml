@@ -13,6 +13,7 @@
             <argument type="service" id="security.acl.provider" />
             <argument type="service" id="security.context" />
             <argument type="service" id="security.acl.object_identity_retrieval_strategy" />
+            <argument>%oneup_acl.permission_strategy%</argument>
         </service>
     </services>
 </container>

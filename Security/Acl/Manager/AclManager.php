@@ -12,31 +12,39 @@ class AclManager extends AbstractAclManager
 {
     protected $provider;
     protected $context;
-    protected $strategy;
+    protected $objectIdentityStrategy;
+    protected $permissionStrategy;
 
     public function __construct(
         MutableAclProviderInterface $provider,
         SecurityContextInterface $context,
-        ObjectIdentityRetrievalStrategyInterface $strategy
+        ObjectIdentityRetrievalStrategyInterface $objectIdentityStrategy,
+        $permissionStrategy
     ) {
         $this->provider = $provider;
         $this->context = $context;
-        $this->strategy = $strategy;
+        $this->objectIdentityStrategy = $objectIdentityStrategy;
+        $this->permissionStrategy = $permissionStrategy;
     }
 
-    public function getProvider()
+    protected function getProvider()
     {
         return $this->provider;
     }
 
-    public function getSecurityContext()
+    protected function getSecurityContext()
     {
         return $this->context;
     }
 
-    public function getObjectIdentityStrategy()
+    protected function getObjectIdentityStrategy()
     {
-        return $this->strategy;
+        return $this->objectIdentityStrategy;
+    }
+
+    protected function getPermissionStrategy()
+    {
+        return $this->permissionStrategy;
     }
 
     public function grant($identity)

@@ -20,6 +20,7 @@ abstract class AbstractAclManager implements AclManagerInterface
     abstract protected function getProvider();
     abstract protected function getSecurityContext();
     abstract protected function getObjectIdentityStrategy();
+    abstract protected function getPermissionStrategy();
 
     public function addObjectPermission($object, $identity, $mask)
     {

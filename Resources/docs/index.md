@@ -57,3 +57,11 @@ To use the Acl features this bundle provides, just retrieve the correct manager 
 $manager = $container->get('oneup_acl.manager');
 $manager->isGranted('ROLE_ADMIN', $object);
 ```
+
+## Next steps
+
+After installing and setting up the basic functionality of this bundle you can move on and use some more advanced
+features.
+
+* [Configuration reference](configuration_reference.md)
+* [Testing the bundle](testing.md)

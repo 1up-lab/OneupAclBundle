@@ -55,7 +55,7 @@ To use the Acl features this bundle provides, just retrieve the correct manager 
 
 ```php
 $manager = $container->get('oneup_acl.manager');
-$manager->isGranted('ROLE_ADMIN', $object);
+$manager->isGranted('EDIT', $object);
 ```
 
 ## Next steps

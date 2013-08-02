@@ -9,6 +9,7 @@ handy features including:
 * Check controller parameters against your access control lists.
 
 [![Build Status](https://travis-ci.org/1up-lab/OneupAclBundle.png)](https://travis-ci.org/1up-lab/OneupAclBundle)
+[![Total Downloads](https://poser.pugx.org/oneup/acl-bundle/downloads.png)](https://packagist.org/packages/oneup/acl-bundle)
 
 Documentation
 -------------

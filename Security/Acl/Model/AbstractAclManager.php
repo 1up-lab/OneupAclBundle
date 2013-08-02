@@ -391,9 +391,9 @@ abstract class AbstractAclManager implements AclManagerInterface
         $acl = $this->getAclFor($object);
 
         if ($type == 'object') {
-            $acl->insertObjectAce($securityIdentity, $mask);
+            $acl->insertObjectAce($securityIdentity, $mask, 0, true, $this->getPermissionStrategy());
         } elseif ($type == 'class') {
-            $acl->insertClassAce($securityIdentity, $mask);
+            $acl->insertClassAce($securityIdentity, $mask, 0, true, $this->getPermissionStrategy());
         } else {
             throw new \InvalidArgumentException('This AceType is not valid.');
         }
@@ -413,9 +413,9 @@ abstract class AbstractAclManager implements AclManagerInterface
         $acl = $this->getAclFor($object);
 
         if ($type == 'object') {
-            $acl->insertObjectFieldAce($field, $securityIdentity, $mask);
+            $acl->insertObjectFieldAce($field, $securityIdentity, $mask, 0, true, $this->getPermissionStrategy());
         } elseif ($type == 'class') {
-            $acl->insertClassFieldAce($field, $securityIdentity, $mask);
+            $acl->insertClassFieldAce($field, $securityIdentity, $mask, 0, true, $this->getPermissionStrategy());
         } else {
             throw new \InvalidArgumentException('This AceType is not valid');
         }

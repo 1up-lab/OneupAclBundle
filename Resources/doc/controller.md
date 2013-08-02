@@ -2,7 +2,7 @@
 
 Symfony2 can convert request parameters to objects and store it as request arguments. You can find more information about this topic in [the documentation](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html). However, this allows you to use a feature of the OneupAclBundle that checks these parameters against your acl rules.
 
-To active the automatic permission check, use the following annotation:
+To activate the automatic permission check, use the following annotation:
 
 ```php
 <?php
@@ -10,7 +10,6 @@ To active the automatic permission check, use the following annotation:
 namespace Acme\DemoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Oneup\AclBundle\Annotation as Acl;
 
 class TestController extends Controller

@@ -5,6 +5,8 @@ namespace Oneup\AclBundle\Tests\Model;
 use Symfony\Component\Security\Acl\Dbal\Schema;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Oneup\AclBundle\Tests\Model\SomeObject;
 
 abstract class AbstractSecurityTest extends WebTestCase
 {
@@ -12,18 +14,10 @@ abstract class AbstractSecurityTest extends WebTestCase
     protected $container;
     protected $manager;
 
-    public function testIfContainerExists()
-    {
-        $this->assertNotNull($this->client);
-        $this->assertNotNull($this->container);
-    }
-
-    public function testIfSecurityContextLoads()
-    {
-        $aclProvider = $this->container->get('security.context');
-        $this->assertTrue($aclProvider->isGranted('ROLE_USER'));
-        $this->assertFalse($aclProvider->isGranted('ROLE_ADMIN'));
-    }
+    protected $object1;
+    protected $object2;
+    protected $mask1;
+    protected $mask2;
 
     protected function setUp()
     {
@@ -54,6 +48,26 @@ abstract class AbstractSecurityTest extends WebTestCase
         }
 
         $this->manager = $this->container->get('oneup_acl.manager');
+
+        $this->object1 = new SomeObject(1);
+        $this->object2 = new SomeObject(2);
+
+        $builder1 = new MaskBuilder();
+        $builder1
+            ->add('view')
+            ->add('create')
+            ->add('edit')
+        ;
+
+        $this->mask1 = $builder1->get();
+
+        $builder2 = new MaskBuilder();
+        $builder2
+            ->add('delete')
+            ->add('undelete')
+        ;
+
+        $this->mask2 = $builder2->get();
     }
 
     protected function getManager()
@@ -71,5 +85,18 @@ abstract class AbstractSecurityTest extends WebTestCase
         $roles += array('ROLE_USER');
 
         return new UsernamePasswordToken(uniqid(), null, 'main', $roles);
+    }
+
+    public function testIfContainerExists()
+    {
+        $this->assertNotNull($this->client);
+        $this->assertNotNull($this->container);
+    }
+
+    public function testIfSecurityContextLoads()
+    {
+        $aclProvider = $this->container->get('security.context');
+        $this->assertTrue($aclProvider->isGranted('ROLE_USER'));
+        $this->assertFalse($aclProvider->isGranted('ROLE_ADMIN'));
     }
 }

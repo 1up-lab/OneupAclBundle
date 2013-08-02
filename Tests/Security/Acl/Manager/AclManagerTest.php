@@ -2,73 +2,64 @@
 
 namespace Oneup\AclBundle\Tests\Security\Acl\Manager;
 
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
-use Oneup\AclBundle\Tests\Model\SomeObject;
 
 class AclManagerTest extends AbstractSecurityTest
 {
     public function testIfTokenIsGrantedByGroup()
     {
         $adminToken = $this->createToken(array('ROLE_ADMIN'));
-        $manager = $this->getManager();
 
-        $object = new SomeObject(1);
-
-        $manager->addObjectPermission($object, 'ROLE_ADMIN', MaskBuilder::MASK_VIEW);
-        $this->assertFalse($manager->isGranted('VIEW', $object));
+        $this->manager->addObjectPermission($this->object1, 'ROLE_ADMIN', $this->mask1);
+        $this->assertFalse($this->manager->isGranted('VIEW', $this->object1));
+        $this->assertFalse($this->manager->isGranted('CREATE', $this->object1));
+        $this->assertFalse($this->manager->isGranted('EDIT', $this->object1));
 
         // set token to admin token and try again
         $this->container->get('security.context')->setToken($adminToken);
-        $this->assertTrue($manager->isGranted('VIEW', $object));
+        $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));
+        $this->assertTrue($this->manager->isGranted('CREATE', $this->object1));
+        $this->assertTrue($this->manager->isGranted('EDIT', $this->object1));
     }
 
     public function testObjectGrantPermissionObject()
     {
-        $manager = $this->getManager();
-        $token = $this->getToken();
-
-        $object = new SomeObject(1);
-
-        $manager->compile(
-            $manager->grant($token)->accessTo($object)->with(MaskBuilder::MASK_OWNER)
+        $this->manager->compile(
+            $this->manager->grant($this->token)->accessTo($this->object1)->with($this->mask1)
         );
 
-        $this->assertTrue($manager->isGranted('OWNER', $object));
+        $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));
+        $this->assertTrue($this->manager->isGranted('CREATE', $this->object1));
+        $this->assertTrue($this->manager->isGranted('EDIT', $this->object1));
     }
 
     public function testObjectRevokePermissionObject()
     {
-        $manager = $this->getManager();
-        $token = $this->getToken();
-
-        $object = new SomeObject(1);
-
-        $manager->compile(
-            $manager->grant($token)->accessTo($object)->with(MaskBuilder::MASK_OWNER)
+        $this->manager->compile(
+            $this->manager->grant($this->token)->accessTo($this->object1)->with($this->mask1)
         );
 
-        $this->assertTrue($manager->isGranted('OWNER', $object));
+        $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));
+        $this->assertTrue($this->manager->isGranted('CREATE', $this->object1));
+        $this->assertTrue($this->manager->isGranted('EDIT', $this->object1));
 
-        $manager->compile(
-            $manager->revoke($token)->accessTo($object)->with(MaskBuilder::MASK_OWNER)
+        $this->manager->compile(
+            $this->manager->revoke($this->token)->accessTo($this->object1)->with($this->mask1)
         );
 
-        $this->assertFalse($manager->isGranted('OWNER', $object));
+        $this->assertFalse($this->manager->isGranted('VIEW', $this->object1));
+        $this->assertFalse($this->manager->isGranted('CREATE', $this->object1));
+        $this->assertFalse($this->manager->isGranted('EDIT', $this->object1));
     }
 
     public function testIfAclManagerLoads()
     {
-        $manager = $this->getManager();
-
-        $this->assertInstanceOf('Oneup\AclBundle\Security\Acl\Model\AclManagerInterface', $manager);
+        $this->assertInstanceOf('Oneup\AclBundle\Security\Acl\Model\AclManagerInterface', $this->manager);
     }
 
     public function testIfAclManagerPropagatesIsGrantedCalls()
     {
-        $manager = $this->getManager();
-
-        $this->assertTrue($manager->isGranted('ROLE_USER'));
-        $this->assertFalse($manager->isGranted('ROLE_ADMIN'));
+        $this->assertTrue($this->manager->isGranted('ROLE_USER'));
+        $this->assertFalse($this->manager->isGranted('ROLE_ADMIN'));
     }
 }

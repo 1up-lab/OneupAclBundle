@@ -426,7 +426,7 @@ abstract class AbstractAclManager implements AclManagerInterface
     protected function createSecurityIdentity($input)
     {
         if (is_null($input)) {
-            return $this->getCurrentAuthenticationToken();
+            $input = $this->getCurrentAuthenticationToken();
         }
 
         $identity = null;
@@ -463,10 +463,12 @@ abstract class AbstractAclManager implements AclManagerInterface
     {
         $token = $this->getSecurityContext()->getToken();
 
-        if (!is_null($token)) {
-            $token = $token->getUser();
+        if (null === $token) {
+            return null;
         }
 
-        return $token;
+        $user = $token->getUser();
+
+        return (is_object($user)) ? $user : 'IS_AUTHENTICATED_ANONYMOUSLY';
     }
 }

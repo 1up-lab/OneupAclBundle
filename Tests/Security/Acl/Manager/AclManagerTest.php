@@ -6,6 +6,12 @@ use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
 
 class AclManagerTest extends AbstractSecurityTest
 {
+    public function testIfTokenMatchesIfNoneWasGiven()
+    {
+        $this->manager->addObjectPermission($this->object1, $this->mask1);
+        $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));
+    }
+
     public function testIfTokenIsGrantedByGroup()
     {
         $adminToken = $this->createToken(array('ROLE_ADMIN'));

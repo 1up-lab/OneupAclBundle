@@ -64,7 +64,7 @@ class PermissionListenerTest extends AbstractSecurityTest
     public function testAccessGranted()
     {
         $object = new SomeObject(1);
-        $this->manager->addObjectPermission($object, $this->getToken(), MaskBuilder::MASK_VIEW);
+        $this->manager->addObjectPermission($object, MaskBuilder::MASK_VIEW, $this->getToken());
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\FilterControllerEvent')
             ->disableOriginalConstructor()
@@ -99,8 +99,8 @@ class PermissionListenerTest extends AbstractSecurityTest
     {
         $object1 = new SomeObject(1);
         $object2 = new SomeObject(2);
-        $this->manager->addObjectPermission($object1, $this->getToken(), MaskBuilder::MASK_VIEW);
-        $this->manager->addObjectPermission($object2, $this->getToken(), MaskBuilder::MASK_VIEW);
+        $this->manager->addObjectPermission($object1, MaskBuilder::MASK_VIEW, $this->getToken());
+        $this->manager->addObjectPermission($object2, MaskBuilder::MASK_VIEW, $this->getToken());
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\FilterControllerEvent')
             ->disableOriginalConstructor()
@@ -139,8 +139,8 @@ class PermissionListenerTest extends AbstractSecurityTest
     {
         $object1 = new SomeObject(1);
         $object2 = new SomeObject(2);
-        $this->manager->addObjectPermission($object1, $this->getToken(), MaskBuilder::MASK_VIEW);
-        $this->manager->addObjectPermission($object2, $this->getToken(), MaskBuilder::MASK_VIEW);
+        $this->manager->addObjectPermission($object1, MaskBuilder::MASK_VIEW, $this->getToken());
+        $this->manager->addObjectPermission($object2, MaskBuilder::MASK_VIEW, $this->getToken());
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\FilterControllerEvent')
             ->disableOriginalConstructor()

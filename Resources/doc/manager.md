@@ -16,28 +16,28 @@ namespace Oneup\AclBundle\Security\Acl\Model;
 
 interface AclManagerInterface
 {
-    public function addObjectPermission($object, $identity, $mask);
-    public function setObjectPermission($object, $identity, $mask);
-    public function revokeObjectPermission($object, $identity, $mask);
-    public function revokeObjectPermissions($object, $identity);
+    public function addObjectPermission($object, $mask, $identity = null);
+    public function setObjectPermission($object, $mask, $identity = null);
+    public function revokeObjectPermission($object, $mask, $identity = null);
+    public function revokeObjectPermissions($object, $identity = null);
     public function revokeAllObjectPermissions($object);
 
-    public function addObjectFieldPermission($object, $field, $identity, $mask);
-    public function setObjectFieldPermission($object, $field, $identity, $mask);
-    public function revokeObjectFieldPermission($object, $field, $identity, $mask);
-    public function revokeObjectFieldPermissions($object, $field, $identity);
+    public function addObjectFieldPermission($object, $field, $mask, $identity = null);
+    public function setObjectFieldPermission($object, $field, $mask, $identity = null);
+    public function revokeObjectFieldPermission($object, $field, $mask, $identity = null);
+    public function revokeObjectFieldPermissions($object, $field, $identity = null);
     public function revokeAllObjectFieldPermissions($object);
 
-    public function addClassPermission($object, $identity, $mask);
-    public function setClassPermission($object, $identity, $mask);
-    public function revokeClassPermission($object, $identity, $mask);
-    public function revokeClassPermissions($object, $identity);
+    public function addClassPermission($object, $mask, $identity = null);
+    public function setClassPermission($object, $mask, $identity = null);
+    public function revokeClassPermission($object, $mask, $identity = null);
+    public function revokeClassPermissions($object, $identity = null);
     public function revokeAllClassPermissions($object);
 
-    public function addClassFieldPermission($object, $field, $identity, $mask);
-    public function setClassFieldPermission($object, $field, $identity, $mask);
-    public function revokeClassFieldPermission($object, $field, $identity, $mask);
-    public function revokeClassFieldPermissions($object, $field, $identity);
+    public function addClassFieldPermission($object, $field, $mask, $identity = null);
+    public function setClassFieldPermission($object, $field, $mask, $identity = null);
+    public function revokeClassFieldPermission($object, $field, $mask, $identity = null);
+    public function revokeClassFieldPermissions($object, $field, $identity = null);
     public function revokeAllClassFieldPermissions($object);
 
     public function isGranted($attributes, $object = null);
@@ -78,6 +78,6 @@ The OneupAclBundle supports for types of permissions (object-, class-, object fi
 ## The parameters
 
 * `object`: Your domain object to apply a permission on. It should implement a `getId` method which returns a unique id.
-* `identity`: A `SecurityIdentity`. This is either a [Token](api.symfony.com/2.3/Symfony/Component/Security/Core/Authentication/Token.html), a [User](http://api.symfony.com/2.3/Symfony/Component/Security/Core/User/UserInterface.html), a [Role](http://api.symfony.com/2.3/Symfony/Component/Security/Core/Role/Role.html) or a string representing a Role.
+* `identity`: A `SecurityIdentity`. This is either a [Token](api.symfony.com/2.3/Symfony/Component/Security/Core/Authentication/Token.html), a [User](http://api.symfony.com/2.3/Symfony/Component/Security/Core/User/UserInterface.html), a [Role](http://api.symfony.com/2.3/Symfony/Component/Security/Core/Role/Role.html) or a string representing a Role. If you don't provide any value for this parameter, the current logged in user will be taken.
 * `mask`: An integer representing a permission mask. You can use Symfony`s [MaskBuilder](http://api.symfony.com/2.3/Symfony/Component/Security/Acl/Permission/MaskBuilder.html) to create a mask.
 * `field`: The name of a property to apply the permission to.

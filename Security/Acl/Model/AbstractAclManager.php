@@ -22,23 +22,23 @@ abstract class AbstractAclManager implements AclManagerInterface
     abstract protected function getObjectIdentityStrategy();
     abstract protected function getPermissionStrategy();
 
-    public function addObjectPermission($object, $identity, $mask)
+    public function addObjectPermission($object, $mask, $identity = null)
     {
         $this->addPermission($object, $identity, $mask, 'object');
     }
 
-    public function setObjectPermission($object, $identity, $mask)
+    public function setObjectPermission($object, $mask, $identity = null)
     {
         $this->revokeObjectPermissions($object, $identity);
         $this->addPermission($object, $identity, $mask, 'object');
     }
 
-    public function revokeObjectPermission($object, $identity, $mask)
+    public function revokeObjectPermission($object, $mask, $identity = null)
     {
         $this->revokePermission($object, $identity, $mask, 'object');
     }
 
-    public function revokeObjectPermissions($object, $identity)
+    public function revokeObjectPermissions($object, $identity = null)
     {
         $securityIdentity = $this->createSecurityIdentity($identity);
 
@@ -72,23 +72,23 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    public function addObjectFieldPermission($object, $field, $identity, $mask)
+    public function addObjectFieldPermission($object, $field, $mask, $identity = null)
     {
         $this->addFieldPermission($object, $field, $identity, $mask, 'object');
     }
 
-    public function setObjectFieldPermission($object, $field, $identity, $mask)
+    public function setObjectFieldPermission($object, $field, $mask, $identity = null)
     {
         $this->revokeObjectFieldPermissions($object, $field, $identity);
         $this->addFieldPermission($object, $field, $identity, $mask, 'object');
     }
 
-    public function revokeObjectFieldPermission($object, $field, $identity, $mask)
+    public function revokeObjectFieldPermission($object, $field, $mask, $identity = null)
     {
         $this->revokeFieldPermission($object, $field, $identity, $mask, 'object');
     }
 
-    public function revokeObjectFieldPermissions($object, $field, $identity)
+    public function revokeObjectFieldPermissions($object, $field, $identity = null)
     {
         $securityIdentity = $this->createSecurityIdentity($identity);
 
@@ -129,23 +129,23 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    public function addClassPermission($object, $identity, $mask)
+    public function addClassPermission($object, $mask, $identity = null)
     {
         $this->addPermission($object, $identity, $mask, 'class');
     }
 
-    public function setClassPermission($object, $identity, $mask)
+    public function setClassPermission($object, $mask, $identity = null)
     {
         $this->revokeClassPermissions($object, $identity);
         $this->addPermission($object, $identity, $mask, 'class');
     }
 
-    public function revokeClassPermission($object, $identity, $mask)
+    public function revokeClassPermission($object, $mask, $identity = null)
     {
         $this->revokePermission($object, $identity, $mask, 'class');
     }
 
-    public function revokeClassPermissions($object, $identity)
+    public function revokeClassPermissions($object, $identity = null)
     {
         if (is_object($object)) {
             $object = get_class($object);
@@ -187,23 +187,23 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->getProvider()->updateAcl($acl);
     }
 
-    public function addClassFieldPermission($object, $field, $identity, $mask)
+    public function addClassFieldPermission($object, $field, $mask, $identity = null)
     {
         $this->addFieldPermission($object, $field, $identity, $mask, 'class');
     }
 
-    public function setClassFieldPermission($object, $field, $identity, $mask)
+    public function setClassFieldPermission($object, $field, $mask, $identity = null)
     {
         $this->revokeClassFieldPermissions($object, $field, $identity);
         $this->addFieldPermission($object, $field, $identity, $mask, 'class');
     }
 
-    public function revokeClassFieldPermission($object, $field, $identity, $mask)
+    public function revokeClassFieldPermission($object, $field, $mask, $identity = null)
     {
         $this->revokeFieldPermission($object, $field, $identity, $mask, 'class');
     }
 
-    public function revokeClassFieldPermissions($object, $field, $identity)
+    public function revokeClassFieldPermissions($object, $field, $identity = null)
     {
         if (is_object($object)) {
             $object = get_class($object);
@@ -425,6 +425,10 @@ abstract class AbstractAclManager implements AclManagerInterface
 
     protected function createSecurityIdentity($input)
     {
+        if (is_null($input)) {
+            return $this->getCurrentAuthenticationToken();
+        }
+
         $identity = null;
 
         if ($input instanceof UserInterface) {

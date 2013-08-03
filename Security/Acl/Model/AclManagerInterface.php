@@ -4,28 +4,28 @@ namespace Oneup\AclBundle\Security\Acl\Model;
 
 interface AclManagerInterface
 {
-    public function addObjectPermission($object, $identity, $mask);
-    public function setObjectPermission($object, $identity, $mask);
-    public function revokeObjectPermission($object, $identity, $mask);
-    public function revokeObjectPermissions($object, $identity);
+    public function addObjectPermission($object, $mask, $identity = null);
+    public function setObjectPermission($object, $mask, $identity = null);
+    public function revokeObjectPermission($object, $mask, $identity = null);
+    public function revokeObjectPermissions($object, $identity = null);
     public function revokeAllObjectPermissions($object);
 
-    public function addObjectFieldPermission($object, $field, $identity, $mask);
-    public function setObjectFieldPermission($object, $field, $identity, $mask);
-    public function revokeObjectFieldPermission($object, $field, $identity, $mask);
-    public function revokeObjectFieldPermissions($object, $field, $identity);
+    public function addObjectFieldPermission($object, $field, $mask, $identity = null);
+    public function setObjectFieldPermission($object, $field, $mask, $identity = null);
+    public function revokeObjectFieldPermission($object, $field, $mask, $identity = null);
+    public function revokeObjectFieldPermissions($object, $field, $identity = null);
     public function revokeAllObjectFieldPermissions($object);
 
-    public function addClassPermission($object, $identity, $mask);
-    public function setClassPermission($object, $identity, $mask);
-    public function revokeClassPermission($object, $identity, $mask);
-    public function revokeClassPermissions($object, $identity);
+    public function addClassPermission($object, $mask, $identity = null);
+    public function setClassPermission($object, $mask, $identity = null);
+    public function revokeClassPermission($object, $mask, $identity = null);
+    public function revokeClassPermissions($object, $identity = null);
     public function revokeAllClassPermissions($object);
 
-    public function addClassFieldPermission($object, $field, $identity, $mask);
-    public function setClassFieldPermission($object, $field, $identity, $mask);
-    public function revokeClassFieldPermission($object, $field, $identity, $mask);
-    public function revokeClassFieldPermissions($object, $field, $identity);
+    public function addClassFieldPermission($object, $field, $mask, $identity = null);
+    public function setClassFieldPermission($object, $field, $mask, $identity = null);
+    public function revokeClassFieldPermission($object, $field, $mask, $identity = null);
+    public function revokeClassFieldPermissions($object, $field, $identity = null);
     public function revokeAllClassFieldPermissions($object);
 
     public function isGranted($attributes, $object = null);

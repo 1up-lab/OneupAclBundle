@@ -28,7 +28,7 @@ class AclInsertListener
         if ($annotation) {
             foreach ($annotation->getClassPermissions() as $classPermission) {
                 foreach ($classPermission->getRoles() as $role => $mask) {
-                    $this->manager->addClassPermission($entity, $role, $mask);
+                    $this->manager->addClassPermission($entity, $mask, $role);
                 }
             }
         }

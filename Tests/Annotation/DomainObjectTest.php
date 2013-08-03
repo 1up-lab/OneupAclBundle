@@ -7,7 +7,7 @@ use Oneup\AclBundle\Annotation as Acl;
 
 class DomainObjectTest extends \PHPUnit_Framework_TestCase
 {
-    public function testRemoveAclProperty()
+    public function testAutoloadDummy()
     {
         // this test is basically useless
         // but the annotation wont autoload if
@@ -15,9 +15,11 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
         // dont blame the messenger
         $domainObject = new Acl\DomainObject();
         $classPermission = new Acl\ClassPermissions(array());
+        $propertyPermission = new Acl\PropertyPermission(array());
 
         $this->assertInstanceOf('Oneup\AclBundle\Annotation\DomainObject', $domainObject);
         $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermissions', $classPermission);
+        $this->assertInstanceOf('Oneup\AclBundle\Annotation\PropertyPermission', $propertyPermission);
     }
 
     public function testIfAnnotationIsLoadable()

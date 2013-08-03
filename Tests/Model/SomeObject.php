@@ -4,6 +4,7 @@ namespace Oneup\AclBundle\Tests\Model;
 
 use Oneup\AclBundle\Annotation\DomainObject;
 use Oneup\AclBundle\Annotation\ClassPermissions;
+use Oneup\AclBundle\Annotation\PropertyPermission;
 
 /**
  * @DomainObject(remove=false, {
@@ -15,6 +16,11 @@ class SomeObject
     private $id;
     private $foo;
     private $bar;
+
+    /**
+     * @PropertyPermission({ "ROLE_ADMIN" = 1 })
+     */
+    private $secured;
 
     public function __construct($id, $foo = null, $bar = null)
     {

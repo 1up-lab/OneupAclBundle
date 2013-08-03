@@ -4,13 +4,13 @@ namespace Oneup\AclBundle\Tests\Model;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Oneup\AclBundle\Annotation\AclCheck;
+use Oneup\AclBundle\Configuration\ParamPermission;
 use Oneup\AclBundle\Tests\Model\SomeObject;
 
 class TestController extends Controller
 {
     /**
-     * @AclCheck({ "one" = "VIEW" })
+     * @ParamPermission({ "one" = "VIEW" })
      */
     public function oneAction(SomeObject $one)
     {
@@ -18,7 +18,7 @@ class TestController extends Controller
     }
 
     /**
-     * @AclCheck({
+     * @ParamPermission({
      *   "one" = "VIEW",
      *   "two" = "VIEW"
      *  })
@@ -29,8 +29,8 @@ class TestController extends Controller
     }
 
     /**
-     * @AclCheck({ "one" = "VIEW" })
-     * @AclCheck({ "two" = "VIEW" })
+     * @ParamPermission({ "one" = "VIEW" })
+     * @ParamPermission({ "two" = "VIEW" })
      */
     public function threeAction(SomeObject $one, SomeObject $two)
     {

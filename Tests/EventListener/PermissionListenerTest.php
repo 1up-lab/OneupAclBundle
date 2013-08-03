@@ -5,7 +5,7 @@ namespace Oneup\AclBundle\Tests\EventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
-use Oneup\AclBundle\Annotation\AclCheck;
+use Oneup\AclBundle\Configuration\ParamPermission;
 use Oneup\AclBundle\EventListener\PermissionListener;
 use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
 use Oneup\AclBundle\Tests\Model\TestController;
@@ -45,7 +45,7 @@ class PermissionListenerTest extends AbstractSecurityTest
         ;
 
         $checks = array(
-            new AclCheck(array('value' => array('one' => 128)))
+            new ParamPermission(array('value' => array('one' => 128)))
         );
 
         $request = new Request(array(), array(), array(
@@ -79,7 +79,7 @@ class PermissionListenerTest extends AbstractSecurityTest
         ;
 
         $checks = array(
-            new AclCheck(array('value' => array('one' => 'VIEW')))
+            new ParamPermission(array('value' => array('one' => 'VIEW')))
         );
 
         $request = new Request(array(), array(), array(
@@ -115,7 +115,7 @@ class PermissionListenerTest extends AbstractSecurityTest
         ;
 
         $checks = array(
-            new AclCheck(array('value' => array(
+            new ParamPermission(array('value' => array(
                 'one' => 'VIEW',
                 'two' => 'VIEW'
             )))
@@ -155,8 +155,8 @@ class PermissionListenerTest extends AbstractSecurityTest
         ;
 
         $checks = array(
-            new AclCheck(array('value' => array('one' => 'VIEW'))),
-            new AclCheck(array('value' => array('two' => 'VIEW')))
+            new ParamPermission(array('value' => array('one' => 'VIEW'))),
+            new ParamPermission(array('value' => array('two' => 'VIEW')))
         );
 
         $request = new Request(array(), array(), array(

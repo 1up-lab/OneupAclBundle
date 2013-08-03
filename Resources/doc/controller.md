@@ -10,12 +10,12 @@ To activate the automatic permission check, use the following annotation:
 namespace Acme\DemoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Oneup\AclBundle\Annotation as Acl;
+use Oneup\AclBundle\Configuration\ParamPermission;
 
 class TestController extends Controller
 {
     /**
-     * @Acl\AclCheck({ "product" = "VIEW" })
+     * @ParamPermission({ "product" = "VIEW" })
      */
     public function viewAction(Product $product)
     {
@@ -23,7 +23,7 @@ class TestController extends Controller
     }
 
     /**
-     * @Acl\AclCheck({ "product" = "DELETE" })
+     * @ParamPermission({ "product" = "DELETE" })
      */
     public function deleteAction(Product $product)
     {
@@ -38,7 +38,7 @@ You can also secure more than one request parameter like this:
 
 ```php
 /**
- * @AclCheck({
+ * @ParamPermission({
  *   "one" = "VIEW",
  *   "two" = "VIEW"
  *  })
@@ -53,8 +53,8 @@ or like this:
 
 ```php
 /**
- * @AclCheck({ "one" = "VIEW" })
- * @AclCheck({ "two" = "VIEW" })
+ * @ParamPermission({ "one" = "VIEW" })
+ * @ParamPermission({ "two" = "VIEW" })
  */
 public function anotherAction(Product $one, Product $two)
 {

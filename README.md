@@ -4,9 +4,9 @@ OneupAclBundle
 The OneupAclBundle provides easy to use Acl features for your Symfony2 application. It is built on top of the Security component and comes with
 handy features including:
 
-* Acl manager, your entry point.
-* Doctrine listeners for automatically remove Acl entries once an entity is deleted.
-* Check controller parameters against your access control lists.
+* an [Acl manager](https://github.com/1up-lab/OneupAclBundle/blob/master/Resources/doc/manager.md), your entry point.
+* [Doctrine listeners](https://github.com/1up-lab/OneupAclBundle/blob/master/Resources/doc/doctrine.md) for automatically remove Acl entries once an entity is deleted.
+* [Check request parameters](https://github.com/1up-lab/OneupAclBundle/blob/master/Resources/doc/controller.md) against your access control lists.
 
 [![Build Status](https://travis-ci.org/1up-lab/OneupAclBundle.png)](https://travis-ci.org/1up-lab/OneupAclBundle)
 [![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/11720473)](http://depending.in/1up-lab/OneupAclBundle)

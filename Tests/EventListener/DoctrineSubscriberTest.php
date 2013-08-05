@@ -5,6 +5,7 @@ namespace Oneup\AclBundle\Tests\EventListener;
 use Oneup\AclBundle\EventListener\DoctrineSubscriber;
 use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
 use Oneup\AclBundle\Tests\Model\SomeObject;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 class DoctrineSubscriberTest extends AbstractSecurityTest
 {
@@ -38,5 +39,38 @@ class DoctrineSubscriberTest extends AbstractSecurityTest
 
         $this->assertTrue($this->manager->isGranted('VIEW', $object));
         $this->assertFalse($this->manager->isGranted('EDIT', $object));
+    }
+
+    public function testPreRemoveListener()
+    {
+        $object = new SomeObject(1);
+
+        $this->assertFalse($this->manager->isGranted('OWNER', $object));
+        $this->assertFalse($this->manager->isGranted('VIEW', $object, 'foo'));
+        $this->assertFalse($this->manager->isGranted('EDIT', $object, 'bar'));
+
+        $this->manager->addObjectPermission($object, MaskBuilder::MASK_OWNER);
+        $this->manager->addObjectFieldPermission($object, 'foo', MaskBuilder::MASK_VIEW);
+        $this->manager->addObjectFieldPermission($object, 'bar', MaskBuilder::MASK_EDIT);
+
+        $this->assertTrue($this->manager->isGranted('OWNER', $object));
+        $this->assertTrue($this->manager->isGranted('VIEW', $object, 'foo'));
+        $this->assertTrue($this->manager->isGranted('EDIT', $object, 'bar'));
+
+        $args = $this->getMockBuilder('Doctrine\ORM\Event\LifecycleEventArgs')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $args->expects($this->any())
+            ->method('getEntity')
+            ->will($this->returnValue($object))
+        ;
+
+        $this->listener->preRemove($args);
+
+        $this->assertFalse($this->manager->isGranted('OWNER', $object));
+        $this->assertFalse($this->manager->isGranted('VIEW', $object, 'foo'));
+        $this->assertFalse($this->manager->isGranted('EDIT', $object, 'bar'));
     }
 }

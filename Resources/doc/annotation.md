@@ -62,3 +62,5 @@ class Post
 }
 
 ```
+
+**Note**: Even if you just add property permissions, you still need the class annotation `Acl\DomainObject`.

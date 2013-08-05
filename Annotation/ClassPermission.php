@@ -6,6 +6,6 @@ namespace Oneup\AclBundle\Annotation;
  * @Annotation
  * @Target({"ANNOTATION"})
  */
-class ClassPermissions extends AbstractPermission
+class ClassPermission extends AbstractPermission
 {
 }

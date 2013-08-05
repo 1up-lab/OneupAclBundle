@@ -18,7 +18,7 @@ use Oneup\AclBundle\Annotation as Acl;
  * @ORM\Entity
  * @ORM\Table(name="posts")
  * @Acl\DomainObject({
- *   @Acl\ClassPermissions({ "ROLE_ADMIN" = MaskBuilder::MASK_IDDQD })
+ *   @Acl\ClassPermission({ "ROLE_ADMIN" = MaskBuilder::MASK_IDDQD })
  * })
  */
 class Post
@@ -35,8 +35,8 @@ You can also add multiple permissions to one class.
  * @ORM\Entity
  * @ORM\Table(name="posts")
  * @Acl\DomainObject({
- *   @Acl\ClassPermissions({ "ROLE_ADMIN" = MaskBuilder::MASK_IDDQD })
- *   @Acl\ClassPermissions({ "ROLE_USER" = MaskBuilder::MASK_VIEW })
+ *   @Acl\ClassPermission({ "ROLE_ADMIN" = MaskBuilder::MASK_IDDQD })
+ *   @Acl\ClassPermission({ "ROLE_USER" = MaskBuilder::MASK_VIEW })
  * })
  */
 class Post

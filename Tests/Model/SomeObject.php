@@ -3,12 +3,12 @@
 namespace Oneup\AclBundle\Tests\Model;
 
 use Oneup\AclBundle\Annotation\DomainObject;
-use Oneup\AclBundle\Annotation\ClassPermissions;
+use Oneup\AclBundle\Annotation\ClassPermission;
 use Oneup\AclBundle\Annotation\PropertyPermission;
 
 /**
  * @DomainObject(remove=false, {
- *   @ClassPermissions({ "ROLE_USER" = 1 })
+ *   @ClassPermission({ "ROLE_USER" = 1 })
  * })
  */
 class SomeObject

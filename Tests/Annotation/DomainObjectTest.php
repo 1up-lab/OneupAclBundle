@@ -14,11 +14,11 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
         // we dont force it to do so.
         // dont blame the messenger
         $domainObject = new Acl\DomainObject();
-        $classPermission = new Acl\ClassPermissions(array());
+        $classPermission = new Acl\ClassPermission(array());
         $propertyPermission = new Acl\PropertyPermission(array());
 
         $this->assertInstanceOf('Oneup\AclBundle\Annotation\DomainObject', $domainObject);
-        $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermissions', $classPermission);
+        $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermission', $classPermission);
         $this->assertInstanceOf('Oneup\AclBundle\Annotation\PropertyPermission', $propertyPermission);
     }
 
@@ -36,7 +36,7 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
         $classPermissions = $annotation->getClassPermissions();
 
         $this->assertCount(1, $classPermissions);
-        $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermissions', $classPermissions[0]);
+        $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermission', $classPermissions[0]);
     }
 
     public function testRemoveKeyInAnnotation()
@@ -51,7 +51,7 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
         $root = new Acl\DomainObject(array(
             'remove' => false,
             'value' => array(
-                new Acl\ClassPermissions(array(
+                new Acl\ClassPermission(array(
                     'value' => array(
                         'ROLE_USER' => 1
                     )
@@ -63,7 +63,7 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $root->getClassPermissions());
 
         foreach ($root->getClassPermissions() as $permission) {
-            $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermissions', $permission);
+            $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermission', $permission);
             $this->assertTrue(is_array($permission->getRoles()));
 
             $roles = $permission->getRoles();
@@ -85,13 +85,13 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
         $root = new Acl\DomainObject(array(
             'remove' => true,
             'value' => array(
-                new Acl\ClassPermissions(array(
+                new Acl\ClassPermission(array(
                     'value' => array(
                         'ROLE_USER' => 1,
                         'ROLE_ADMIN' => 2,
                     )
                 )),
-                new Acl\ClassPermissions(array(
+                new Acl\ClassPermission(array(
                     'value' => array(
                         'ROLE_SUPER_ADMIN' => 4,
                     )
@@ -103,7 +103,7 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $root->getClassPermissions());
 
         foreach ($root->getClassPermissions() as $permission) {
-            $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermissions', $permission);
+            $this->assertInstanceOf('Oneup\AclBundle\Annotation\ClassPermission', $permission);
             $this->assertTrue(is_array($permission->getRoles()));
 
             $roles = $permission->getRoles();

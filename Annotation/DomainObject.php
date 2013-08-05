@@ -15,7 +15,6 @@ class DomainObject
 
     public function __construct($data = array())
     {
-        $this->remove = true;
         $this->classPermissions = array();
 
         if (array_key_exists('remove', $data)) {

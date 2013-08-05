@@ -49,18 +49,22 @@ class DoctrineSubscriber implements EventSubscriber
 
     public function preRemove(LifecycleEventArgs $args)
     {
-        if (!$this->remove) {
+        $reader  = $this->container->get('annotation_reader');
+        $manager = $this->container->get('oneup_acl.manager');
+        $remove  = $this->container->getParameter('oneup_acl.remove_orphans');
+
+        if (!$remove) {
             return;
         }
 
         $entity = $args->getEntity();
         $object = new \ReflectionClass($entity);
 
-        $annotation = $this->reader->getClassAnnotation($object, 'Oneup\AclBundle\Annotation\DomainObject');
+        $annotation = $reader->getClassAnnotation($object, 'Oneup\AclBundle\Annotation\DomainObject');
 
-        if ($annotation && ($annotation->getRemove() && $this->remove)) {
-            $this->manager->revokeAllObjectPermissions($entity);
-            $this->manager->revokeAllObjectFieldPermissions($entity);
+        if ($annotation && ($remove || !!$annotation->getRemove())) {
+            $manager->revokeAllObjectPermissions($entity);
+            $manager->revokeAllObjectFieldPermissions($entity);
         }
     }
 

@@ -8,7 +8,7 @@ use Oneup\AclBundle\Annotation\PropertyPermission;
 
 /**
  * @DomainObject(remove=true, {
- *   @ClassPermissions({ "ROLE_USER" = 1 })
+ *   @ClassPermission({ "ROLE_USER" = 1 })
  * })
  */
 class SomeObject

@@ -7,6 +7,10 @@ use Oneup\AclBundle\Annotation\ClassPermission;
 use Oneup\AclBundle\Annotation\PropertyPermission;
 
 /**
+ * Masks from Symfony\Component\Security\Acl\Permission\MaskBuilder
+ */
+
+/**
  * @DomainObject(remove=true, {
  *   @ClassPermission({ "ROLE_USER" = 1 })
  * })

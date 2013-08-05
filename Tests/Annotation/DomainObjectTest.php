@@ -43,7 +43,7 @@ class DomainObjectTest extends \PHPUnit_Framework_TestCase
     {
         $root = new Acl\DomainObject();
 
-        $this->assertTrue($root->getRemove());
+        $this->assertNull($root->getRemove());
     }
 
     public function testDataOfAnnotationSimple()

@@ -5,7 +5,7 @@ namespace Oneup\AclBundle\Security\Acl\Model;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
-use Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException;
+use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Voter\FieldVote;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -42,7 +42,10 @@ abstract class AbstractAclManager implements AclManagerInterface
     {
         $securityIdentity = $this->createSecurityIdentity($identity);
 
-        $acl  = $this->getAclFor($object);
+        $acl  = $this->getAclFor($object, false);
+
+        if (null === $acl) return;
+
         $aces = $acl->getObjectAces();
 
         $size = count($aces) - 1;
@@ -59,7 +62,10 @@ abstract class AbstractAclManager implements AclManagerInterface
 
     public function revokeAllObjectPermissions($object)
     {
-        $acl  = $this->getAclFor($object);
+        $acl  = $this->getAclFor($object, false);
+
+        if (null === $acl) return;
+
         $aces = $acl->getObjectAces();
 
         $size = count($aces) - 1;
@@ -92,7 +98,10 @@ abstract class AbstractAclManager implements AclManagerInterface
     {
         $securityIdentity = $this->createSecurityIdentity($identity);
 
-        $acl  = $this->getAclFor($object);
+        $acl  = $this->getAclFor($object, false);
+
+        if (null === $acl) return;
+
         $fieldAces = $acl->getObjectFieldAces($field);
 
         $size = count($fieldAces) - 1;
@@ -109,7 +118,9 @@ abstract class AbstractAclManager implements AclManagerInterface
 
     public function revokeAllObjectFieldPermissions($object)
     {
-        $acl = $this->getAclFor($object);
+        $acl = $this->getAclFor($object, false);
+
+        if (null === $acl) return;
 
         $reflection = new \ReflectionClass($object);
         $properties = $reflection->getProperties();
@@ -147,13 +158,16 @@ abstract class AbstractAclManager implements AclManagerInterface
 
     public function revokeClassPermissions($object, $identity = null)
     {
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
         if (is_object($object)) {
             $object = get_class($object);
         }
 
-        $securityIdentity = $this->createSecurityIdentity($identity);
+        $acl  = $this->getAclFor($object, false);
 
-        $acl  = $this->getAclFor($object);
+        if (null === $acl) return;
+
         $aces = $acl->getClassAces();
 
         $size = count($aces) - 1;
@@ -174,7 +188,10 @@ abstract class AbstractAclManager implements AclManagerInterface
             $object = get_class($object);
         }
 
-        $acl  = $this->getAclFor($object);
+        $acl  = $this->getAclFor($object, false);
+
+        if (null === $acl) return;
+
         $aces = $acl->getClassAces();
 
         $size = count($aces) - 1;
@@ -205,13 +222,16 @@ abstract class AbstractAclManager implements AclManagerInterface
 
     public function revokeClassFieldPermissions($object, $field, $identity = null)
     {
+        $securityIdentity = $this->createSecurityIdentity($identity);
+
         if (is_object($object)) {
             $object = get_class($object);
         }
 
-        $securityIdentity = $this->createSecurityIdentity($identity);
+        $acl  = $this->getAclFor($object, false);
 
-        $acl  = $this->getAclFor($object);
+        if (null === $acl) return;
+
         $fieldAces = $acl->getClassFieldAces($field);
 
         $size = count($fieldAces) - 1;
@@ -229,6 +249,8 @@ abstract class AbstractAclManager implements AclManagerInterface
     public function revokeAllClassFieldPermissions($object)
     {
         $acl = $this->getAclFor($object);
+
+        if (null === $acl) return;
 
         $reflection = new \ReflectionClass($object);
         $properties = $reflection->getProperties();
@@ -273,14 +295,17 @@ abstract class AbstractAclManager implements AclManagerInterface
         $this->revokeClassPermissions($object, $identity);
     }
 
-    protected function getAclFor($object)
+    protected function getAclFor($object, $createAcl = true)
     {
+        $acl = null;
         $identity = $this->createObjectIdentity($object);
 
         try {
-            $acl = $this->getProvider()->createAcl($identity);
-        } catch (AclAlreadyExistsException $e) {
             $acl = $this->getProvider()->findAcl($identity);
+        } catch (AclNotFoundException $e) {
+            if ($createAcl) {
+                $acl = $this->getProvider()->createAcl($identity);
+            }
         }
 
         return $acl;
@@ -296,7 +321,7 @@ abstract class AbstractAclManager implements AclManagerInterface
 
         $securityIdentity = $this->createSecurityIdentity($identity);
 
-        $acl  = $this->getAclFor($object);
+        $acl  = $this->getAclFor($object, false);
         $aces = $type == 'object' ? $acl->getObjectAces() : $acl->getClassAces();
 
         $size = count($aces) - 1;
@@ -321,7 +346,7 @@ abstract class AbstractAclManager implements AclManagerInterface
 
         $securityIdentity = $this->createSecurityIdentity($identity);
 
-        $acl  = $this->getAclFor($object);
+        $acl  = $this->getAclFor($object, false);
         $fieldAces = $type == 'object' ? $acl->getObjectFieldAces($field) : $acl->getClassFieldAces($field);
 
         $size = count($fieldAces) - 1;
@@ -366,7 +391,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             }
         }
 
-        $acl  = $this->getAclFor($object);
+        $acl  = $this->getAclFor($object, false);
         $aces = $acl->getClassAces();
 
         $size = count($aces) - 1;

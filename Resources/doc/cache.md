@@ -22,4 +22,4 @@ $objects = // ...
 $manager->preload($objects, $token);
 ```
 
-> ** Credit where credit is due **: thx Jeroen Hoek and his [thread](https://groups.google.com/forum/#!topic/symfony2/H2JotbyW_fw) on Google Groups.
+> Credit where credit is due: Thanks Jeroen Hoek and his [thread](https://groups.google.com/forum/#!topic/symfony2/H2JotbyW_fw) on Google Groups.

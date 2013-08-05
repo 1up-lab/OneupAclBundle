@@ -2,6 +2,7 @@
 
 namespace Oneup\AclBundle\Security\Acl\Manager;
 
+use Symfony\Component\Security\Acl\Domain\AclCollectionCache;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -10,6 +11,7 @@ use Oneup\AclBundle\Security\Acl\Model\AbstractAclManager;
 
 class AclManager extends AbstractAclManager
 {
+    protected $cache;
     protected $provider;
     protected $context;
     protected $objectIdentityStrategy;
@@ -19,12 +21,26 @@ class AclManager extends AbstractAclManager
         MutableAclProviderInterface $provider,
         SecurityContextInterface $context,
         ObjectIdentityRetrievalStrategyInterface $objectIdentityStrategy,
+        AclCollectionCache $cache,
         $permissionStrategy
     ) {
         $this->provider = $provider;
         $this->context = $context;
         $this->objectIdentityStrategy = $objectIdentityStrategy;
+        $this->cache = $cache;
         $this->permissionStrategy = $permissionStrategy;
+    }
+
+    public function preload($objects, $token = null)
+    {
+        if (is_null($token)) {
+            $token = $this->getCurrentAuthenticationToken();
+        }
+
+        $objects = is_array($objects) ? $objects : array($objects);
+        $token = is_array($token) ? $token : array($token);
+
+        return $this->cache->cache($objects, $token);
     }
 
     protected function getProvider()

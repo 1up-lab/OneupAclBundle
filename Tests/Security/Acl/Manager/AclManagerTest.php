@@ -6,6 +6,12 @@ use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
 
 class AclManagerTest extends AbstractSecurityTest
 {
+    public function testIfPreloadFailsGracefullyIfNothingToLoad()
+    {
+        $ret = $this->manager->preload(array());
+        $this->assertNull($ret);
+    }
+
     public function testIfTokenMatchesIfNoneWasGiven()
     {
         $this->manager->addObjectPermission($this->object1, $this->mask1);

@@ -469,6 +469,6 @@ abstract class AbstractAclManager implements AclManagerInterface
 
         $user = $token->getUser();
 
-        return (is_object($user)) ? $user : 'IS_AUTHENTICATED_ANONYMOUSLY';
+        return (is_object($user)) ? $user : $token;
     }
 }

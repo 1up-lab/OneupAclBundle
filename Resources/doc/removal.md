@@ -1,10 +1,8 @@
-# Use the Doctrine features
+# The RemoveListener
 
-By default, only the DBAL layer of doctrine is needed to run this bundle. This is because Acl does not use the ORM but plain
+> By default, only the DBAL layer of doctrine is needed to run this bundle. This is because Acl does not use the ORM but plain
 queries for performance reasons. If you however choose to use Doctrine ORM, there are some more handy features this bundle
 brings along.
-
-## The RemoveListener
 
 Inherently, Acl entries won't be deleted once the corresponding domain object is removed. The OneupAclBundle comes with a `RemoveListener`
 which does this by default. So if you have the ORM installed, the acl entires will be automatically deleted.

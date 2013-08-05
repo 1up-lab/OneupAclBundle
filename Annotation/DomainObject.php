@@ -2,7 +2,7 @@
 
 namespace Oneup\AclBundle\Annotation;
 
-use Oneup\AclBundle\Annotation\ClassPermissions;
+use Oneup\AclBundle\Annotation\ClassPermission;
 
 /**
  * @Annotation
@@ -23,7 +23,7 @@ class DomainObject
 
         if (array_key_exists('value', $data) && is_array($data['value'])) {
             foreach ($data['value'] as $sub) {
-                if ($sub instanceof ClassPermissions) {
+                if ($sub instanceof ClassPermission) {
                     $this->classPermissions[] = $sub;
                 }
             }

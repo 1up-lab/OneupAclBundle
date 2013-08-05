@@ -55,7 +55,7 @@ $> php app/console init:acl
 ### Step 3: Configure and start using the bundle
 
 This bundle was designed to just work out of the box. You actually don't have to configure anything, the AclBundle comes
-along with sane defaults. 
+along with sane defaults.
 
 To use the Acl features this bundle provides, just retrieve the correct manager service.
 
@@ -71,6 +71,8 @@ features.
 
 * [Use the AclManager](manager.md)
 * [Check permissions on controller arguments](controller.md)
-* [Configure auto removal of Acl entries](doctrine.md#the-removelistener)
+* [Define class permissions via annotations](annotation.md)
+* [Configure auto removal of Acl entries](removal.md)
+* [Preload Acl to a CollectionCache](cache.md)
 * [Configuration reference](configuration_reference.md)
 * [Testing the bundle](testing.md)

@@ -9,7 +9,7 @@ which does this by default. So if you have the ORM installed, the acl entires wi
 
 You can still choose to opt-out of this behaviour in several ways.
 
-# Turn off acl removal in configuration
+### Turn off acl removal in configuration
 
 Do so by setting the `remove_orphans` setting to `false`. In this case you fall back to Symfony`s original behaviour and nothing
 gets deleted.
@@ -21,7 +21,7 @@ oneup_acl:
     remove_orphans: false
 ```
 
-# Turn off acl removal for specific entity
+### Turn off acl removal for specific entity
 
 You can use the `DomainObject` annotation to opt-out of acl removal for a specific entity type.
 

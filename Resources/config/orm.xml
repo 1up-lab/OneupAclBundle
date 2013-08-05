@@ -5,19 +5,9 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="oneup_acl.remove_listener" class="Oneup\AclBundle\EventListener\AclRemoveListener">
-            <argument>%oneup_acl.remove_orphans%</argument>
-            <argument type="service" id="annotation_reader" />
-            <argument type="service" id="oneup_acl.manager" />
-
-            <tag name="doctrine.event_listener" event="preRemove" />
-        </service>
-
-        <service id="oneup_acl.insert_listener" class="Oneup\AclBundle\EventListener\AclInsertListener">
-            <argument type="service" id="annotation_reader" />
-            <argument type="service" id="oneup_acl.manager" />
-
-            <tag name="doctrine.event_listener" event="postPersist" />
+        <service id="oneup_acl.doctrine_subscriber" class="Oneup\AclBundle\EventListener\DoctrineSubscriber">
+            <argument type="service" id="service_container" />
+            <tag name="doctrine.event_subscriber" />
         </service>
     </services>
 </container>

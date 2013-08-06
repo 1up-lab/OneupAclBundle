@@ -5,66 +5,59 @@ namespace Oneup\AclBundle\EventListener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use Oneup\AclBundle\Driver\DriverChain;
+use Oneup\AclBundle\Security\Acl\Model\AclManagerInterface;
 
 class DoctrineSubscriber implements EventSubscriber
 {
-    protected $container;
+    protected $chain;
+    protected $remove;
+    protected $manager;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(DriverChain $chain, AclManagerInterface $manager, $remove)
     {
-        $this->container = $container;
+        $this->chain = $chain;
+        $this->manager = $manager;
+        $this->remove = $remove;
     }
 
     public function postPersist(LifecycleEventArgs $args)
     {
-        $reader  = $this->container->get('annotation_reader');
-        $manager = $this->container->get('oneup_acl.manager');
-
         $entity = $args->getEntity();
         $object = new \ReflectionClass($entity);
 
-        $annotation = $reader->getClassAnnotation($object, 'Oneup\AclBundle\Annotation\DomainObject');
+        $metaData = $this->chain->readMetaData($object);
 
-        if ($annotation) {
-            foreach ($annotation->getClassPermissions() as $classPermission) {
-                foreach ($classPermission->getRoles() as $role => $mask) {
-                    $manager->addClassPermission($entity, $mask, $role);
-                }
+        if (!empty($metaData)) {
+            // add class permissions
+            foreach ($metaData['permissions'] as $permission) {
+                $this->manager->addClassPermission($entity, $permission[1], $permission[0]);
             }
 
-            $properties = $object->getProperties();
-
-            foreach ($properties as $property) {
-                $propAnnotation = $reader->getPropertyAnnotation($property, 'Oneup\AclBundle\Annotation\PropertyPermissions');
-
-                if ($propAnnotation) {
-                    foreach ($propAnnotation->getRoles() as $role => $mask) {
-                        $manager->addClassFieldPermission($entity, $property->getName(), $mask, $role);
-                    }
-                }
+            // add property permissions
+            foreach ($metaData['properties'] as $name => $property) {
+                $this->manager->addClassFieldPermission($entity, $name, $property[1], $property[0]);
             }
         }
     }
 
     public function preRemove(LifecycleEventArgs $args)
     {
-        $reader  = $this->container->get('annotation_reader');
-        $manager = $this->container->get('oneup_acl.manager');
-        $remove  = $this->container->getParameter('oneup_acl.remove_orphans');
-
-        if (!$remove) {
+        if (!$this->remove) {
             return;
         }
 
         $entity = $args->getEntity();
         $object = new \ReflectionClass($entity);
 
-        $annotation = $reader->getClassAnnotation($object, 'Oneup\AclBundle\Annotation\DomainObject');
+        $metaData = $this->chain->readMetaData($object);
 
-        if ($annotation && ($remove || !!$annotation->getRemove())) {
-            $manager->revokeAllObjectPermissions($entity);
-            $manager->revokeAllObjectFieldPermissions($entity);
+        if (!empty($metaData) && ($this->remove || !!$metaData['remove'])) {
+            $this->manager->revokeAllObjectPermissions($entity);
+            $this->manager->revokeAllObjectFieldPermissions($entity);
         }
     }
 

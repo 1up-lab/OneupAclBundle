@@ -17,6 +17,7 @@ class OneupAclExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('security.xml');
+        $loader->load('driver.xml');
 
         // if doctrine/orm is available, load orm configuration
         if (class_exists('Doctrine\ORM\EntityManager')) {

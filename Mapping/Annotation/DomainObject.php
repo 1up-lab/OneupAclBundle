@@ -1,8 +1,8 @@
 <?php
 
-namespace Oneup\AclBundle\Annotation;
+namespace Oneup\AclBundle\Mapping\Annotation;
 
-use Oneup\AclBundle\Annotation\ClassPermission;
+use Oneup\AclBundle\Mapping\Annotation\ClassPermission;
 
 /**
  * @Annotation

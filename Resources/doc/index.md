@@ -46,13 +46,21 @@ public function registerBundles()
 }
 ```
 
+### Step 3: Configure and start using the bundle
+
 To create the tables needed, run the following command.
 
 ```
 $> php app/console init:acl
 ```
 
-### Step 3: Configure and start using the bundle
+This bundles uses the underneath Acl layer, so enable it by adding the following to your security configuration.
+
+``` yaml
+security:
+    acl:
+        connection: default
+```
 
 This bundle was designed to just work out of the box. You actually don't have to configure anything, the AclBundle comes
 along with sane defaults.

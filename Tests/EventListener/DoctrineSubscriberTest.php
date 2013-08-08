@@ -2,7 +2,6 @@
 
 namespace Oneup\AclBundle\Tests\EventListener;
 
-use Oneup\AclBundle\EventListener\DoctrineSubscriber;
 use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
 use Oneup\AclBundle\Tests\Model\SomeObject;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;

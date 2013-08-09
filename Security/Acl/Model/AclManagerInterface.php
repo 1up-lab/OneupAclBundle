@@ -28,5 +28,5 @@ interface AclManagerInterface
     public function revokeClassFieldPermissions($object, $field, $identity = null);
     public function revokeAllClassFieldPermissions($object);
 
-    public function isGranted($attributes, $object = null);
+    public function isGranted($attributes, $object = null, $field = null);
 }

@@ -65,6 +65,13 @@ $manager = $this->get('oneup_acl.manager');
 $manager->isGranted('VIEW', $product);
 ```
 
+You can provide a third parameter to the `isGranted` method, which will be used for field permission testing. So, to test
+if the current loged in user has the permission to access the `name` property on `$product` use it like this:
+
+```php
+$manager->isGranted('VIEW', $product, 'name');
+```
+
 ## Add and revoke permissions
 
 The OneupAclBundle supports for types of permissions (object-, class-, object field- and class field permissions). All of them are represented with similar methods in the `AclManager`.

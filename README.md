@@ -19,6 +19,10 @@ The entry point of the documentation can be found in the file `Resources/docs/in
 
 [Read the documentation for master](https://github.com/1up-lab/OneupAclBundle/blob/master/Resources/doc/index.md)
 
+Upgrade Notes
+-------------
+* First feature complete version **v0.9.0**
+
 License
 -------
 

@@ -19,15 +19,16 @@
             "role": "Developer"
         }
     ],
-    
+
     "require": {
-        "symfony/framework-bundle": "2.*",
-        "symfony/security-bundle": "2.*",
+        "symfony/framework-bundle": ">=2.2",
+        "symfony/security-bundle": ">=2.2",
+        "symfony/expression-language": "~2.4",
         "doctrine/doctrine-bundle": "1.2.*@dev",
         "doctrine/common": "~2.2",
         "doctrine/dbal": "~2.2"
     },
-    
+
     "require-dev": {
         "symfony/finder": ">=2.0.16,<2.4-dev",
         "symfony/browser-kit": "2.*",
@@ -35,12 +36,12 @@
         "doctrine/orm": "~2.2",
         "phpunit/phpunit": "3.7.*"
     },
-    
+
     "suggest": {
         "sensio/framework-extra-bundle": "Allows you to use controller annotations.",
         "doctrine/orm": "Allows you to remove Acl entries automatically."
     },
-    
+
     "autoload": {
         "psr-0": { "Oneup\\AclBundle": "" }
     },

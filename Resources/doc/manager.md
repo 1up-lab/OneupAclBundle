@@ -79,7 +79,7 @@ The OneupAclBundle supports for types of permissions (object-, class-, object fi
 * `add*Permission`: Add a new permission entry. If no Acl for the given domain object exists, it will be created.
 * `set*Permission`: Overwrite existing Acl entries with the given `SecurityIdentity` and mask.
 * `revoke*Permission`: Revoke the Ace matching the triple "object", "identity" and "mask".
-* `revoke*Permissions`: Revoke all entires for a given `SecurityIdentity` and object.
+* `revoke*Permissions`: Revoke all entries for a given `SecurityIdentity` and object.
 * `revokeAll*Permissions`: Revoke all entries associated with the given object.
 
 ## The parameters

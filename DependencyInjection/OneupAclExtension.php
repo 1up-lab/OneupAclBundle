@@ -18,18 +18,15 @@ class OneupAclExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('security.xml');
         $loader->load('driver.xml');
-
-        // if doctrine/orm is available, load orm configuration
-        if (class_exists('Doctrine\ORM\EntityManager')) {
-            $loader->load('orm.xml');
-        }
+        $loader->load('doctrine.xml');
 
         if (class_exists('Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle')) {
             $loader->load('configuration.xml');
         }
 
         $strategy = constant(
-            sprintf('Symfony\Component\Security\Acl\Domain\PermissionGrantingStrategy::%s',
+            sprintf(
+                'Symfony\Component\Security\Acl\Domain\PermissionGrantingStrategy::%s',
                 strtoupper($config['permission_strategy'])
             )
         );

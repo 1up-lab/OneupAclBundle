@@ -44,10 +44,6 @@ class DoctrineSubscriber implements EventSubscriber
         $manager = $this->container->get('oneup_acl.manager');
         $remove = $this->container->getParameter('oneup_acl.remove_orphans');
 
-        if (!$remove) {
-            return;
-        }
-
         $entity = $args->getEntity();
         $object = new \ReflectionClass($entity);
 

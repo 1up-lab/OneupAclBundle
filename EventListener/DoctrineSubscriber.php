@@ -44,16 +44,14 @@ class DoctrineSubscriber implements EventSubscriber
         $manager = $this->container->get('oneup_acl.manager');
         $remove = $this->container->getParameter('oneup_acl.remove_orphans');
 
-        if (!$remove) {
-            return;
-        }
-
         $entity = $args->getEntity();
         $object = new \ReflectionClass($entity);
 
         $metaData = $chain->readMetaData($object);
 
-        if (!empty($metaData) && ($remove || !!$metaData['remove'])) {
+        if (($remove && (!isset($metaData['remove']) || $metaData['remove'])) ||
+            (!$remove && isset($metaData['remove']) && $metaData['remove'])
+        ) {
             $manager->revokeAllObjectPermissions($entity);
             $manager->revokeAllObjectFieldPermissions($entity);
         }

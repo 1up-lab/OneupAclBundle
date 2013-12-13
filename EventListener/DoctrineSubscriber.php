@@ -53,7 +53,9 @@ class DoctrineSubscriber implements EventSubscriber
 
         $metaData = $chain->readMetaData($object);
 
-        if (!empty($metaData) && ($remove || !!$metaData['remove'])) {
+        if (($remove && (!isset($metaData['remove']) || $metaData['remove'])) ||
+            (!$remove && isset($metaData['remove']) && $metaData['remove'])
+        ) {
             $manager->revokeAllObjectPermissions($entity);
             $manager->revokeAllObjectFieldPermissions($entity);
         }

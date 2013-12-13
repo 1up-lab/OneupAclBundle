@@ -1,5 +1,7 @@
 # Secure your controller arguments
 
+> Note: If you are using the Sensio Framework Extra Bundle version 3.0+ you might prefer using the [@Security](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/security.html) annotation. The @Security annotation also supports the [ExpressionLanguage](http://symfony.com/doc/current/book/security.html#complex-access-controls-with-expressions) which might be more powerful.
+
 Symfony2 can convert request parameters to objects and store it as request arguments. You can find more information about this topic in [the documentation](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html). However, this allows you to use a feature of the OneupAclBundle that checks these parameters against your acl rules.
 
 To activate the automatic permission check, use the following annotation:

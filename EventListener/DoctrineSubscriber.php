@@ -3,7 +3,7 @@
 namespace Oneup\AclBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DoctrineSubscriber implements EventSubscriber
@@ -20,7 +20,7 @@ class DoctrineSubscriber implements EventSubscriber
         $chain = $this->container->get('oneup_acl.driver_chain');
         $manager = $this->container->get('oneup_acl.manager');
 
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
         $object = new \ReflectionClass($entity);
 
         $metaData = $chain->readMetaData($object);
@@ -48,7 +48,7 @@ class DoctrineSubscriber implements EventSubscriber
             return;
         }
 
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
         $object = new \ReflectionClass($entity);
 
         $metaData = $chain->readMetaData($object);

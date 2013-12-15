@@ -26,13 +26,13 @@ class DoctrineSubscriberTest extends AbstractSecurityTest
         $this->assertFalse($this->manager->isGranted('VIEW', $object));
         $this->assertFalse($this->manager->isGranted('EDIT', $object));
 
-        $args = $this->getMockBuilder('Doctrine\ORM\Event\LifecycleEventArgs')
+        $args = $this->getMockBuilder('Doctrine\Common\Persistence\Event\LifecycleEventArgs')
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $args->expects($this->any())
-            ->method('getEntity')
+            ->method('getObject')
             ->will($this->returnValue($object))
         ;
 
@@ -58,13 +58,13 @@ class DoctrineSubscriberTest extends AbstractSecurityTest
         $this->assertTrue($this->manager->isGranted('VIEW', $object, 'foo'));
         $this->assertTrue($this->manager->isGranted('EDIT', $object, 'bar'));
 
-        $args = $this->getMockBuilder('Doctrine\ORM\Event\LifecycleEventArgs')
+        $args = $this->getMockBuilder('Doctrine\Common\Persistence\Event\LifecycleEventArgs')
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $args->expects($this->any())
-            ->method('getEntity')
+            ->method('getObject')
             ->will($this->returnValue($object))
         ;
 

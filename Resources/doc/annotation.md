@@ -12,7 +12,7 @@ namespace Acme\DemoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Oneup\AclBundle\Annotation as Acl;
+use Oneup\AclBundle\Mapping\Annotation as Acl;
 
 /**
  * @ORM\Entity
@@ -35,7 +35,7 @@ You can also add multiple permissions to one class.
  * @ORM\Entity
  * @ORM\Table(name="posts")
  * @Acl\DomainObject({
- *   @Acl\ClassPermission({ "ROLE_ADMIN" = MaskBuilder::MASK_IDDQD })
+ *   @Acl\ClassPermission({ "ROLE_ADMIN" = MaskBuilder::MASK_IDDQD }),
  *   @Acl\ClassPermission({ "ROLE_USER" = MaskBuilder::MASK_VIEW })
  * })
  */

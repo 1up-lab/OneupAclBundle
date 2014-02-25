@@ -1,3 +1,6 @@
+#IDE
+.idea/
+
 # Bootstrap
 app/bootstrap*
 

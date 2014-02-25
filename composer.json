@@ -24,7 +24,7 @@
         "symfony/framework-bundle": ">=2.2",
         "symfony/security-bundle": ">=2.2",
         "symfony/expression-language": "~2.4",
-        "doctrine/doctrine-bundle": "1.2.*@dev",
+        "doctrine/doctrine-bundle": "1.3.*@dev",
         "doctrine/common": "~2.2",
         "doctrine/dbal": "~2.2"
     },

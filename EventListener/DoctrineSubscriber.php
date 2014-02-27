@@ -3,7 +3,7 @@
 namespace Oneup\AclBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Common\EventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DoctrineSubscriber implements EventSubscriber
@@ -15,7 +15,7 @@ class DoctrineSubscriber implements EventSubscriber
         $this->container = $container;
     }
 
-    public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(EventArgs $args)
     {
         $chain = $this->container->get('oneup_acl.driver_chain');
         $manager = $this->container->get('oneup_acl.manager');
@@ -38,7 +38,7 @@ class DoctrineSubscriber implements EventSubscriber
         }
     }
 
-    public function preRemove(LifecycleEventArgs $args)
+    public function preRemove(EventArgs $args)
     {
         $chain = $this->container->get('oneup_acl.driver_chain');
         $manager = $this->container->get('oneup_acl.manager');

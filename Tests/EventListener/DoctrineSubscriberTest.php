@@ -43,7 +43,7 @@ class DoctrineSubscriberTest extends AbstractSecurityTest
         $this->assertFalse($this->manager->isGranted('EDIT', $object));
 
         // Test with Doctrine\ORM\Event\LifecycleEventArgs
-        $object = new SomeObject(1);
+        $object = new SomeObject(2);
 
         $this->assertFalse($this->manager->isGranted('VIEW', $object));
         $this->assertFalse($this->manager->isGranted('EDIT', $object));

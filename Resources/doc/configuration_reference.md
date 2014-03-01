@@ -5,6 +5,6 @@ All available configuration options along with their default values are listed b
 
 ``` yaml
 oneup_acl:
-    remove_orphans:       true
+    remove_orphans:       false
     permission_strategy:  all
 ```

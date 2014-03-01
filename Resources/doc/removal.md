@@ -4,22 +4,40 @@
 queries for performance reasons. If you however choose to use Doctrine ORM, there are some more handy features this bundle
 brings along.
 
-Inherently, Acl entries won't be deleted once the corresponding domain object is removed. The OneupAclBundle comes with a `RemoveListener`
-which does this by default. So if you have the ORM installed, the acl entires will be automatically deleted.
+Inherently, Acl entries won't be deleted once the corresponding domain object is removed (default behaviour of the bundle). The OneupAclBundle comes with a `RemoveListener`
+which does this, if you enable it.
 
-You can still choose to opt-out of this behaviour in several ways.
+### Turn on acl removal in configuration
 
-### Turn off acl removal in configuration
-
-Do so by setting the `remove_orphans` setting to `false`. In this case you fall back to Symfony`s original behaviour and nothing
-gets deleted.
+Do so by setting the `remove_orphans` setting to `true`. So if you have the ORM installed, the acl entires will be automatically deleted.
 
 ```yaml
 # app/config/config.yml
 
 oneup_acl:
-    remove_orphans: false
+    remove_orphans: true
 ```
+
+### Turn on acl removal for specific entity
+
+You can use the `DomainObject` annotation to enable acl removal for a specific entity type if you disabled `remove_orphans` by configuration.
+
+```php
+<?php
+
+namespace Acme\DemoBundle\Entity;
+
+use Oneup\AclBundle\Annotation as Acl;
+
+/**
+ * @Acl\DomainObject(remove=true)
+ */
+class Product
+{
+}
+```
+
+In this case Acl entries for the domain object `Product` will be deleted from database, if the entity gets deleted. Entries belonging to other domain objects will still be persistent.
 
 ### Turn off acl removal for specific entity
 

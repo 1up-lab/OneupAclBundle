@@ -18,6 +18,8 @@ Documentation
 The entry point of the documentation can be found in the file `Resources/docs/index.md`
 
 [Read the documentation for master](https://github.com/1up-lab/OneupAclBundle/blob/master/Resources/doc/index.md)
+[Read the documentation for v0.10.1](https://github.com/1up-lab/OneupAclBundle/blob/v0.10.1/Resources/doc/index.md)
+[Read the documentation for v0.9.1](https://github.com/1up-lab/OneupAclBundle/blob/v0.9.1/Resources/doc/index.md)
 
 Upgrade Notes
 -------------

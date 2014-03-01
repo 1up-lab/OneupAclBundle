@@ -19,12 +19,13 @@ The entry point of the documentation can be found in the file `Resources/docs/in
 
 [Read the documentation for master](https://github.com/1up-lab/OneupAclBundle/blob/master/Resources/doc/index.md)
 
-[Read the documentation for v0.10.1](https://github.com/1up-lab/OneupAclBundle/blob/v0.10.1/Resources/doc/index.md)
+[Read the documentation for v0.10.0](https://github.com/1up-lab/OneupAclBundle/blob/v0.10.0/Resources/doc/index.md)
 
 [Read the documentation for v0.9.1](https://github.com/1up-lab/OneupAclBundle/blob/v0.9.1/Resources/doc/index.md)
 
 Upgrade Notes
 -------------
+* Changed default value of `remove_orphans` to false **v0.10.0**
 * Fixed a bug in the DoctrineSubscriber **v0.9.1**
 * First feature complete version **v0.9.0**
 

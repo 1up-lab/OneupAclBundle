@@ -21,6 +21,7 @@ The entry point of the documentation can be found in the file `Resources/docs/in
 
 Upgrade Notes
 -------------
+* Fixed a bug in the DoctrineSubscriber **v0.9.1**
 * First feature complete version **v0.9.0**
 
 License

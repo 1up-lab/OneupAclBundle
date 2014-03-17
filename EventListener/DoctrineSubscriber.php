@@ -20,7 +20,7 @@ class DoctrineSubscriber implements EventSubscriber
         $chain = $this->container->get('oneup_acl.driver_chain');
         $manager = $this->container->get('oneup_acl.manager');
 
-        $entity = $args->getObject();
+        $entity = $args->getEntity();
         $object = new \ReflectionClass($entity);
 
         $metaData = $chain->readMetaData($object);
@@ -44,7 +44,7 @@ class DoctrineSubscriber implements EventSubscriber
         $manager = $this->container->get('oneup_acl.manager');
         $remove = $this->container->getParameter('oneup_acl.remove_orphans');
 
-        $entity = $args->getObject();
+        $entity = $args->getEntity();
         $object = new \ReflectionClass($entity);
 
         $metaData = $chain->readMetaData($object);

@@ -9,7 +9,6 @@ handy features including:
 * [Check request parameters](https://github.com/1up-lab/OneupAclBundle/blob/master/Resources/doc/controller.md) against your access control lists.
 
 [![Build Status](https://travis-ci.org/1up-lab/OneupAclBundle.png)](https://travis-ci.org/1up-lab/OneupAclBundle)
-[![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/11720473)](http://depending.in/1up-lab/OneupAclBundle)
 [![Total Downloads](https://poser.pugx.org/oneup/acl-bundle/downloads.png)](https://packagist.org/packages/oneup/acl-bundle)
 
 Documentation

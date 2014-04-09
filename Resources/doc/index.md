@@ -18,7 +18,7 @@ Add OneupAclBundle to your composer.json using the following construct:
 ```js
 {
     "require": {
-        "oneup/acl-bundle": "~0.9"
+        "oneup/acl-bundle": "~0.10"
     }
 }
 ```

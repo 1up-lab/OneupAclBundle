@@ -20,7 +20,11 @@ class DoctrineSubscriber implements EventSubscriber
         $chain = $this->container->get('oneup_acl.driver_chain');
         $manager = $this->container->get('oneup_acl.manager');
 
-        $entity = $args->getObject();
+        if ($args instanceof \Doctrine\ODM\MongoDB\Event\LifecycleEventArgs) {
+            $entity = $args->getDocument();
+        } else {
+            $entity = $args->getObject();
+        }
         $object = new \ReflectionClass($entity);
 
         $metaData = $chain->readMetaData($object);

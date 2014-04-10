@@ -25,8 +25,8 @@ class DoctrineSubscriber implements EventSubscriber
         } else {
             $entity = $args->getObject();
         }
-        $object = new \ReflectionClass($entity);
 
+        $object = new \ReflectionClass($entity);
         $metaData = $chain->readMetaData($object);
 
         if (!empty($metaData)) {
@@ -48,9 +48,13 @@ class DoctrineSubscriber implements EventSubscriber
         $manager = $this->container->get('oneup_acl.manager');
         $remove = $this->container->getParameter('oneup_acl.remove_orphans');
 
-        $entity = $args->getObject();
-        $object = new \ReflectionClass($entity);
+        if ($args instanceof \Doctrine\ODM\MongoDB\Event\LifecycleEventArgs) {
+            $entity = $args->getDocument();
+        } else {
+            $entity = $args->getObject();
+        }
 
+        $object = new \ReflectionClass($entity);
         $metaData = $chain->readMetaData($object);
 
         if (($remove && (!isset($metaData['remove']) || $metaData['remove'])) ||

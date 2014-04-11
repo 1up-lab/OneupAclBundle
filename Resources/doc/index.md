@@ -82,5 +82,6 @@ features.
 * [Define class permissions via annotations](annotation.md)
 * [Configure auto removal of Acl entries](removal.md)
 * [Preload Acl to a CollectionCache](cache.md)
+* [Access all objects for a specific user](find_objects_for_user.md)
 * [Configuration reference](configuration_reference.md)
 * [Testing the bundle](testing.md)

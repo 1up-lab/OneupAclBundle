@@ -66,7 +66,7 @@ class CreateAclCommand extends ContainerAwareCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @access protected
-     * @return void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -135,6 +135,8 @@ class CreateAclCommand extends ContainerAwareCommand
         $aclProvider->updateAcl($acl);
 
         $output->writeln('<info>ACL successfully updated.</info>');
+
+        return 0;
     }
 
     /**

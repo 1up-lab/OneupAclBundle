@@ -62,7 +62,7 @@ class DeleteAclCommand extends ContainerAwareCommand
     /**
      * execute
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      * @access protected
      * @return void
@@ -81,6 +81,7 @@ class DeleteAclCommand extends ContainerAwareCommand
 
         if ($doctrine != 'doctrine' && $doctrine != 'doctrine_mongodb') {
             $output->writeln('<error>You have to choose between "doctrine" and "doctrine_mongodb"</error>');
+
             return 1;
         }
 
@@ -91,6 +92,7 @@ class DeleteAclCommand extends ContainerAwareCommand
 
         if (!$object) {
             $output->writeln('<error>Unable to find the ' . $objectClass . ':' . $objectId . '</error>');
+
             return 1;
         }
 
@@ -100,6 +102,7 @@ class DeleteAclCommand extends ContainerAwareCommand
             $acl = $aclProvider->findAcl($objectIdentity);
         } catch (\Symfony\Component\Security\Acl\Exception\AclNotFoundException $e) {
             $output->writeln('<error>No previous acl found for ' . $objectClass . ':' . $objectId . '</error>');
+
             return 1;
         }
 
@@ -110,6 +113,7 @@ class DeleteAclCommand extends ContainerAwareCommand
 
         if (!$user) {
             $output->writeln('<error>User ' . $username . ' not found.</error>');
+
             return 1;
         }
 

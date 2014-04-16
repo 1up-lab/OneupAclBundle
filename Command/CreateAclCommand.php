@@ -63,7 +63,7 @@ class CreateAclCommand extends ContainerAwareCommand
     /**
      * execute
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      * @access protected
      * @return void
@@ -82,6 +82,7 @@ class CreateAclCommand extends ContainerAwareCommand
 
         if ($doctrine != 'doctrine' && $doctrine != 'doctrine_mongodb') {
             $output->writeln('<error>You have to choose between "doctrine" and "doctrine_mongodb"</error>');
+
             return 1;
         }
 
@@ -92,6 +93,7 @@ class CreateAclCommand extends ContainerAwareCommand
 
         if (!$object) {
             $output->writeln('<error>Unable to find the ' . $objectClass . ':' . $objectId . '</error>');
+
             return 1;
         }
 
@@ -110,6 +112,7 @@ class CreateAclCommand extends ContainerAwareCommand
 
         if (!$user) {
             $output->writeln('<error>User ' . $username . ' not found.</error>');
+
             return 1;
         }
 

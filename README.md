@@ -24,6 +24,8 @@ The entry point of the documentation can be found in the file `Resources/docs/in
 
 Upgrade Notes
 -------------
+* Added `oneup:acl:create` and `oneup:acl:delete` commands **v0.11.0** (Thanks to [jdeniau](https://github.com/jdeniau))
+* Fixed bugs for [doctrine/mongodb-odm](https://github.com/doctrine/mongodb-odm) **v0.10.1**
 * Changed default value of `remove_orphans` to false **v0.10.0**
 * Fixed a bug in the DoctrineSubscriber **v0.9.1**
 * First feature complete version **v0.9.0**

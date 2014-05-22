@@ -16,6 +16,7 @@ class OneupAclExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.xml');
         $loader->load('security.xml');
         $loader->load('driver.xml');
         $loader->load('doctrine.xml');

@@ -66,7 +66,7 @@ class AclProvider extends MutableAclProvider
             LEFT JOIN {$this->options['class_table_name']} c
                 ON (c.id = o.class_id)
             WHERE s.identifier = {$this->connection->quote($identifier)}
-            AND e.mask > {$mask}
+            AND e.mask >= {$mask}
 END;
 
         if ($type) {

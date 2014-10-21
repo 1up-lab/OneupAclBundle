@@ -184,7 +184,7 @@ END;
         } elseif ($identityObject instanceof TokenInterface) {
             return UserSecurityIdentity::fromToken($identityObject);
         } elseif ($identityObject instanceof RoleInterface) {
-            return new RoleSecurityIdentity($identityObject);
+            return new RoleSecurityIdentity($identityObject->getRole());
         }
 
         return null;

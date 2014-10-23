@@ -160,7 +160,7 @@ class AclProvider extends MutableAclProvider
                 return $this->connection->quote($elem);
             }, $identifier);
 
-            $sql .= $this->connection->getDatabasePlatform()->getInExpression('s.identifier', $identifiers);
+			$sql .= 'WHERE s.identifier IN (' . implode(', ', $identifiers) . ')';
         }
         else {
             $sql .= ' WHERE s.identifier = ' . $this->connection->quote($identifier);

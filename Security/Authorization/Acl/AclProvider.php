@@ -163,13 +163,13 @@ class AclProvider extends MutableAclProvider
             $sql .= $this->connection->getDatabasePlatform()->getInExpression('s.identifier', $identifiers);
         }
         else {
-            $sql .= 'WHERE s.identifier = ' . $this->connection->quote($identifier);
+            $sql .= ' WHERE s.identifier = ' . $this->connection->quote($identifier);
         }
 
-        $sql .= 'AND e.mask >= ' . $mask;
+        $sql .= ' AND e.mask >= ' . $mask;
 
         if ($type) {
-            $sql .= 'AND c.class_type = ' . $this->connection->quote($type);
+            $sql .= ' AND c.class_type = ' . $this->connection->quote($type);
         }
         
         return $sql;

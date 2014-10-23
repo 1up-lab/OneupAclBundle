@@ -25,24 +25,27 @@ class AclProvider extends MutableAclProvider
     /** @var Connection $connection */
     protected $connection;
 
-    /** Locates all objects that the specified User has access to.
-     *
-     * Note that this method has a few limitations:
-     *  - No support for filtering by mask.
-     *  - No support for ACEs that match one of the User's roles (only ACEs that
-     *      reference the User's security identity will be matched).
-     *  - Every ACE that matches is assumed to grant access.
-     *
-     * @param UserInterface $identityObject
-     * @param integer       $mask
-     * @param string        $type   If set, filter by object type (classname).
-     *
-     * @return ObjectIdentity[]
-     */
+	/** Locates all objects that the specified User has access to.
+	 *
+	 * Note that this method has a few limitations:
+	 *  - No support for filtering by mask.
+	 *  - No support for ACEs that match one of the User's roles (only ACEs that
+	 *      reference the User's security identity will be matched).
+	 *  - Every ACE that matches is assumed to grant access.
+	 *
+	 * @param UserInterface $identityObject
+	 * @param int $mask
+	 * @param string $type If set, filter by object type (classname).
+	 * @param bool $withRoles If set, get identities by role
+	 *
+	 * @throws \Doctrine\DBAL\DBALException
+	 * @return ObjectIdentity[]
+	 */
     public function findObjectIdentitiesForUser(
         $identityObject,
         $mask = MaskBuilder::MASK_VIEW,
-        $type = null
+        $type = null,
+		$withRoles = false
     ) {
         /** @var UserSecurityIdentity $securityIdentity */
         $securityIdentity = $this->getSecurityEntity($identityObject);
@@ -50,35 +53,25 @@ class AclProvider extends MutableAclProvider
             return null;
         }
 
-        $identifier = sprintf(
-            '%s-%s',
-            $securityIdentity->getClass(),
-            $securityIdentity->getUsername()
-        );
+		$identifier = sprintf(
+			'%s-%s',
+			$securityIdentity->getClass(),
+			$securityIdentity->getUsername()
+		);
 
-        $sql = <<<END
-            SELECT
-              o.object_identifier
-            , c.class_type
-            FROM {$this->options['sid_table_name']} s
-            LEFT JOIN {$this->options['entry_table_name']} e
-                ON (
-                        (e.security_identity_id = s.id)
-                    or  {$this->connection->getDatabasePlatform()->getIsNullExpression('e.security_identity_id')}
-                )
-            LEFT JOIN {$this->options['oid_table_name']} o
-                ON (o.id = e.object_identity_id)
-            LEFT JOIN {$this->options['class_table_name']} c
-                ON (c.id = o.class_id)
-            WHERE s.identifier = {$this->connection->quote($identifier)}
-            AND e.mask >= {$mask}
-END;
+		if ($withRoles) {
+			$identifiers = array($identifier);
+			foreach ($identityObject->getRoles() as $role) {
+				$identifiers[] = $role;
+			}
 
-        if ($type) {
-            $sql .= <<<END
-        AND c.class_type = {$this->connection->quote($type)}
-END;
-        }
+			$sql = $this->getQuery($identifiers, $mask, $type);
+
+		}
+		else {
+			$sql = $this->getQuery($identifier, $mask, $type);
+		}
+
 
         $objectIdentities = array();
 
@@ -126,29 +119,7 @@ END;
 
         $identifier = $securityIdentity->getRole();
 
-        $sql = <<<END
-            SELECT
-              o.object_identifier
-            , c.class_type
-            FROM {$this->options['sid_table_name']} s
-            LEFT JOIN {$this->options['entry_table_name']} e
-                ON (
-                        (e.security_identity_id = s.id)
-                    or  {$this->connection->getDatabasePlatform()->getIsNullExpression('e.security_identity_id')}
-                )
-            LEFT JOIN {$this->options['oid_table_name']} o
-                ON (o.id = e.object_identity_id)
-            LEFT JOIN {$this->options['class_table_name']} c
-                ON (c.id = o.class_id)
-            WHERE s.identifier = {$this->connection->quote($identifier)}
-            AND e.mask >= {$mask}
-END;
-
-        if ($type) {
-            $sql .= <<<END
-        AND c.class_type = {$this->connection->quote($type)}
-END;
-        }
+        $sql = $this->getQuery($identifier, $mask, $type);
 
         $objectIdentities = array();
 
@@ -169,6 +140,40 @@ END;
         return $objectIdentities;
     }
 
+    private function getQuery($identifier, $mask, $type) {
+        $sql = "SELECT
+              o.object_identifier
+            , c.class_type
+            FROM {$this->options['sid_table_name']} s
+            LEFT JOIN {$this->options['entry_table_name']} e
+                ON (
+                        (e.security_identity_id = s.id)
+                    OR  {$this->connection->getDatabasePlatform()->getIsNullExpression('e.security_identity_id')}
+                )
+            LEFT JOIN {$this->options['oid_table_name']} o
+                ON (o.id = e.object_identity_id)
+            LEFT JOIN {$this->options['class_table_name']} c
+                ON (c.id = o.class_id)";
+
+        if (is_array($identifier)) {
+            $identifiers = array_map(function ($elem) {
+                return $this->connection->quote($elem);
+            }, $identifier);
+
+            $sql .= $this->connection->getDatabasePlatform()->getInExpression('s.identifier', $identifiers);
+        }
+        else {
+            $sql .= 'WHERE s.identifier = ' . $this->connection->quote($identifier);
+        }
+
+        $sql .= 'AND e.mask >= ' . $mask;
+
+        if ($type) {
+            $sql .= 'AND c.class_type = ' . $this->connection->quote($type);
+        }
+        
+        return $sql;
+    }
 
     /**
      * getSecurityEntity

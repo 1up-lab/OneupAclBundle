@@ -13,8 +13,6 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Util\ClassUtils;
 
-use Oneup\AclBundle\Security\Acl\Model\AclManagerInterface;
-
 abstract class AbstractAclManager implements AclManagerInterface
 {
     abstract protected function getProvider();

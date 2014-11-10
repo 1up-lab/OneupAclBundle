@@ -2,8 +2,6 @@
 
 namespace Oneup\AclBundle\Mapping\Annotation;
 
-use Oneup\AclBundle\Mapping\Annotation\ClassPermission;
-
 /**
  * @Annotation
  * @Target({"CLASS"})

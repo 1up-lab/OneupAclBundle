@@ -62,8 +62,8 @@ class DeleteAclCommand extends ContainerAwareCommand
     /**
      * execute
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
      * @access protected
      * @return void
      */
@@ -137,7 +137,7 @@ class DeleteAclCommand extends ContainerAwareCommand
     /**
      * get
      *
-     * @param mixed $key
+     * @param  mixed $key
      * @access protected
      * @return mixed
      */

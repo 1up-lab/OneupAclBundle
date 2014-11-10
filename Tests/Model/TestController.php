@@ -5,7 +5,6 @@ namespace Oneup\AclBundle\Tests\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Oneup\AclBundle\Configuration\ParamPermission;
-use Oneup\AclBundle\Tests\Model\SomeObject;
 
 class TestController extends Controller
 {

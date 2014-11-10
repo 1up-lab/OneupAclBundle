@@ -63,8 +63,8 @@ class CreateAclCommand extends ContainerAwareCommand
     /**
      * execute
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
      * @access protected
      * @return int
      */
@@ -142,7 +142,7 @@ class CreateAclCommand extends ContainerAwareCommand
     /**
      * get
      *
-     * @param mixed $key
+     * @param  mixed $key
      * @access protected
      * @return mixed
      */

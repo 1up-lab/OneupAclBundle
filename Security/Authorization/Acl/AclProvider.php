@@ -34,9 +34,9 @@ class AclProvider extends MutableAclProvider
      *  - Every ACE that matches is assumed to grant access.
      *
      * @param UserInterface $identityObject
-     * @param int $mask
-     * @param string $type If set, filter by object type (classname).
-     * @param bool $withRoles If set, get identities by role
+     * @param int           $mask
+     * @param string        $type           If set, filter by object type (classname).
+     * @param bool          $withRoles      If set, get identities by role
      *
      * @throws \Doctrine\DBAL\DBALException
      * @return ObjectIdentity[]
@@ -64,19 +64,16 @@ class AclProvider extends MutableAclProvider
             foreach ($identityObject->getRoles() as $role) {
                 if (is_string($role)) {
                     $identifiers[] = $role;
-                }
-                elseif (is_object($role) && $role instanceof RoleInterface) {
+                } elseif (is_object($role) && $role instanceof RoleInterface) {
                     $identifiers[] = $role->getRole();
                 }
             }
 
             $sql = $this->getQuery($identifiers, $mask, $type);
 
-        }
-        else {
+        } else {
             $sql = $this->getQuery($identifier, $mask, $type);
         }
-
 
         $objectIdentities = array();
 
@@ -107,7 +104,7 @@ class AclProvider extends MutableAclProvider
      *
      * @param RoleInterface $identityObject
      * @param integer       $mask
-     * @param string        $type   If set, filter by object type (classname).
+     * @param string        $type           If set, filter by object type (classname).
      *
      * @return ObjectIdentity[]
      */
@@ -145,7 +142,8 @@ class AclProvider extends MutableAclProvider
         return $objectIdentities;
     }
 
-    private function getQuery($identifier, $mask, $type) {
+    private function getQuery($identifier, $mask, $type)
+    {
         $sql = "SELECT
               o.object_identifier
             , c.class_type
@@ -161,14 +159,13 @@ class AclProvider extends MutableAclProvider
                 ON (c.id = o.class_id)";
 
         if (is_array($identifier)) {
-			$connection = $this->connection;
-            $identifiers = array_map(function ($elem) use($connection) {
+            $connection = $this->connection;
+            $identifiers = array_map(function ($elem) use ($connection) {
                 return $connection->quote($elem);
             }, $identifier);
 
             $sql .= 'WHERE s.identifier IN (' . implode(', ', $identifiers) . ')';
-        }
-        else {
+        } else {
             $sql .= ' WHERE s.identifier = ' . $this->connection->quote($identifier);
         }
 
@@ -184,7 +181,7 @@ class AclProvider extends MutableAclProvider
     /**
      * getSecurityEntity
      *
-     * @param mixed $identityObject
+     * @param  mixed                     $identityObject
      * @access private
      * @return SecurityIdentityInterface
      */
@@ -200,4 +197,4 @@ class AclProvider extends MutableAclProvider
 
         return null;
     }
-} 
+}

@@ -2,8 +2,6 @@
 
 namespace Oneup\AclBundle\Driver;
 
-use Oneup\AclBundle\Driver\DriverInterface;
-
 class DriverChain
 {
     protected $drivers;

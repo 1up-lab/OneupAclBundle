@@ -6,7 +6,6 @@ use Symfony\Component\Security\Acl\Dbal\Schema;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Oneup\AclBundle\Tests\Model\SomeObject;
 
 abstract class AbstractSecurityTest extends WebTestCase
 {

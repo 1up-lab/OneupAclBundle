@@ -77,14 +77,15 @@ class AclProviderTest extends AbstractSecurityTest
             $user,
             MaskBuilder::MASK_EDIT
         );
+
         $this->assertEmpty($ret);
 
-        // add right on object2 (instanceof SomeObject)
+        // add permission on object2 (instanceof SomeObject)
         $this->manager->addObjectPermission($this->object2, $this->mask1, $user);
         $ret = $aclProvider->findObjectIdentitiesForUser($user, MaskBuilder::MASK_EDIT);
         $this->assertCount(1, $ret);
 
-        // add another object type
+        // add permission to another object
         $tmp = new SomeOtherObject(1);
         $this->manager->addObjectPermission($tmp, $this->mask1, $user);
         $ret = $aclProvider->findObjectIdentitiesForUser($user, MaskBuilder::MASK_EDIT);
@@ -101,14 +102,15 @@ class AclProviderTest extends AbstractSecurityTest
             null,
             true
         );
+
         $this->assertEmpty($ret);
 
-        // add right on object2 (instanceof SomeObject)
+        // add permission on object2 (instanceof SomeObject)
         $this->manager->addObjectPermission($this->object2, $this->mask1, $userRole);
         $ret = $aclProvider->findObjectIdentitiesForUser($user2, MaskBuilder::MASK_EDIT, null, true);
         $this->assertCount(1, $ret);
 
-        // add another object type
+        // add permission to another object
         $tmp = new SomeOtherObject(1);
         $this->manager->addObjectPermission($tmp, $this->mask1, $userRole);
         $ret = $aclProvider->findObjectIdentitiesForUser($user2, MaskBuilder::MASK_EDIT, null, true);

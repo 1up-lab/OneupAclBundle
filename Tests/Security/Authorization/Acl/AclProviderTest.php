@@ -4,6 +4,7 @@ namespace Oneup\AclBundle\Tests\Security\Authorization\Acl;
 
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Core\Role\Role;
 use Oneup\AclBundle\Tests\Model\SomeOtherObject;
 
 use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
@@ -69,7 +70,8 @@ class AclProviderTest extends AbstractSecurityTest
     public function testFindObjectIdentitiesForUser()
     {
         $aclProvider = $this->container->get('security.acl.provider');
-        $user = new User('usertest', 'pwd');
+        $userRole = new Role('ROLE_USER');
+        $user = new User('usertest', 'pwd', array($userRole));
 
         $ret = $aclProvider->findObjectIdentitiesForUser(
             $user,
@@ -90,6 +92,30 @@ class AclProviderTest extends AbstractSecurityTest
 
         // filter by type
         $ret = $aclProvider->findObjectIdentitiesForUser($user, MaskBuilder::MASK_EDIT, get_class($tmp));
+        $this->assertCount(1, $ret);
+
+        $user2 = new User('user2test', 'pwd', array($userRole));
+        $ret = $aclProvider->findObjectIdentitiesForUser(
+            $user2,
+            MaskBuilder::MASK_EDIT,
+            null,
+            true
+        );
+        $this->assertEmpty($ret);
+
+        // add right on object2 (instanceof SomeObject)
+        $this->manager->addObjectPermission($this->object2, $this->mask1, $userRole);
+        $ret = $aclProvider->findObjectIdentitiesForUser($user2, MaskBuilder::MASK_EDIT, null, true);
+        $this->assertCount(1, $ret);
+
+        // add another object type
+        $tmp = new SomeOtherObject(1);
+        $this->manager->addObjectPermission($tmp, $this->mask1, $userRole);
+        $ret = $aclProvider->findObjectIdentitiesForUser($user2, MaskBuilder::MASK_EDIT, null, true);
+        $this->assertCount(2, $ret);
+
+        // filter by type
+        $ret = $aclProvider->findObjectIdentitiesForUser($user2, MaskBuilder::MASK_EDIT, get_class($tmp), true);
         $this->assertCount(1, $ret);
     }
 }

@@ -6,6 +6,24 @@ use Oneup\AclBundle\Tests\Model\AbstractSecurityTest;
 
 class AclManagerClassFieldPermissionTest extends AbstractSecurityTest
 {
+    /**
+     * When we add we add a classField before and objectField, it's ok
+     */
+    public function testAddClassFieldThenAddObjectField()
+    {
+        $this->manager->addClassFieldPermission($this->object1, 'foo', $this->mask1, $this->token);
+        $this->manager->addObjectFieldPermission($this->object1, 'bar', $this->mask1, $this->token);
+    }
+
+    /**
+     * When we add an objectField before we add a classField, it throws an ConcurrentModificationException
+     */
+    public function testAddObjectFieldThenAddClassField()
+    {
+        $this->manager->addObjectFieldPermission($this->object1, 'bar', $this->mask1, $this->token);
+        $this->manager->addClassFieldPermission($this->object1, 'foo', $this->mask1, $this->token);
+    }
+
     public function testAddOfClassFieldPermission()
     {
         // add permission to class

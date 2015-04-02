@@ -9,6 +9,8 @@ This can easily become a pain if you have a lot of items to load.
 This bundle adds the reverse side to symfony: you can load all items for a user just with this command: 
 
 ```php
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+
 $aclProvider = $this->get('security.acl.provider');
 $user = $this->get('security.context')->getToken()->getUser();
 

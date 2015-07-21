@@ -458,7 +458,9 @@ abstract class AbstractAclManager implements AclManagerInterface
             $identity = UserSecurityIdentity::fromAccount($input);
         } elseif ($input instanceof TokenInterface) {
             $identity = UserSecurityIdentity::fromToken($input);
-        } elseif ($input instanceof RoleInterface || is_string($input)) {
+        } elseif ($input instanceof RoleInterface) {
+            $identity = new RoleSecurityIdentity($input->getRole());
+        } elseif (is_string($input)) {
             $identity = new RoleSecurityIdentity($input);
         } elseif ($input instanceof SecurityIdentityInterface) {
             $identity = $input;

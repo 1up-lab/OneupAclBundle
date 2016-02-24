@@ -32,7 +32,7 @@
     "require-dev": {
         "symfony/finder": ">=2.0.16,<2.4-dev",
         "symfony/browser-kit": "2.*",
-        "sensio/framework-extra-bundle": "~2.2",
+        "sensio/framework-extra-bundle": "~2.2|~3.0",
         "doctrine/orm": "~2.4",
         "phpunit/phpunit": "3.7.*"
     },

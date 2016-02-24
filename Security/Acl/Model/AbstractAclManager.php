@@ -16,7 +16,8 @@ use Doctrine\Common\Util\ClassUtils;
 abstract class AbstractAclManager implements AclManagerInterface
 {
     abstract protected function getProvider();
-    abstract protected function getSecurityContext();
+    abstract protected function getTokenStorage();
+    abstract protected function getAuthorizationChecker();
     abstract protected function getObjectIdentityStrategy();
     abstract protected function getPermissionStrategy();
 
@@ -280,7 +281,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             $object = new FieldVote($oid, $field);
         }
 
-        return $this->getSecurityContext()->isGranted($attributes, $object);
+        return $this->getAuthorizationChecker()->isGranted($attributes, $object);
     }
 
     protected function revokePermissions($object, $identity)
@@ -488,7 +489,7 @@ abstract class AbstractAclManager implements AclManagerInterface
 
     protected function getCurrentAuthenticationToken()
     {
-        $token = $this->getSecurityContext()->getToken();
+        $token = $this->getTokenStorage()->getToken();
 
         if (null === $token) {
             return null;

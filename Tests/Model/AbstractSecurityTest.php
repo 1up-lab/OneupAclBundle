@@ -6,6 +6,7 @@ use Symfony\Component\Security\Acl\Dbal\Schema;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\HttpKernel\Kernel;
 
 abstract class AbstractSecurityTest extends WebTestCase
 {
@@ -24,7 +25,7 @@ abstract class AbstractSecurityTest extends WebTestCase
         $this->container = $this->client->getContainer();
 
         $this->token = $this->createToken();
-        $this->container->get('security.context')->setToken($this->token);
+        $this->container->get((Kernel::VERSION_ID < 20600 ? 'security.context' : 'security.token_storage'))->setToken($this->token);
 
         $this->connection = $this->container->get('database_connection');
 
@@ -94,7 +95,7 @@ abstract class AbstractSecurityTest extends WebTestCase
 
     public function testIfSecurityContextLoads()
     {
-        $aclProvider = $this->container->get('security.context');
+        $aclProvider = $this->container->get((Kernel::VERSION_ID < 20600 ? 'security.context' : 'security.authorization_checker'));
         $this->assertTrue($aclProvider->isGranted('ROLE_USER'));
         $this->assertFalse($aclProvider->isGranted('ROLE_ADMIN'));
     }

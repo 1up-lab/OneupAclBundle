@@ -6,6 +6,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Acl\Domain\PermissionGrantingStrategy;
 
 class OneupAclExtension extends Extension
@@ -16,7 +17,11 @@ class OneupAclExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+        if (Kernel::VERSION_ID < 20600) {
+            $loader->load('manager_23.xml');
+        } else {
+            $loader->load('manager_26.xml');
+        }
         $loader->load('security.xml');
         $loader->load('driver.xml');
         $loader->load('doctrine.xml');

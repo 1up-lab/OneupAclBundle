@@ -1,6 +1,6 @@
 # Getting started
 
-The OneupAclBundle is a Symfony2 bundle which is primary tested against version 2.3 of the framework. Yet, there is the
+The OneupAclBundle is a Symfony bundle which is primary tested against version 2.3 of the framework. Yet, there is the
 possibility that this bundle also works for version 2.1 and following.
 
 ## Installation
@@ -18,7 +18,7 @@ Add OneupAclBundle to your composer.json using the following construct:
 ```js
 {
     "require": {
-        "oneup/acl-bundle": "~0.10"
+        "oneup/acl-bundle": "~1.0"
     }
 }
 ```

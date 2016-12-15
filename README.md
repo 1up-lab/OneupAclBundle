@@ -1,7 +1,7 @@
 OneupAclBundle
 ==============
 
-The OneupAclBundle provides easy to use Acl features for your Symfony2 application. It is built on top of the Security component and comes with
+The OneupAclBundle provides easy to use Acl features for your Symfony application. It is built on top of the Security component and comes with
 handy features including:
 
 * an [Acl manager](https://github.com/1up-lab/OneupAclBundle/blob/master/Resources/doc/manager.md), your entry point.
@@ -24,6 +24,7 @@ The entry point of the documentation can be found in the file `Resources/docs/in
 
 Upgrade Notes
 -------------
+* Symfony 3 compatibility **1.0.0** (Thanks to [vrnagy](https://github.com/vrnagy))
 * Added `oneup:acl:create` and `oneup:acl:delete` commands **v0.11.0** (Thanks to [jdeniau](https://github.com/jdeniau))
 * Fixed bugs for [doctrine/mongodb-odm](https://github.com/doctrine/mongodb-odm) **v0.10.1**
 * Changed default value of `remove_orphans` to false **v0.10.0**

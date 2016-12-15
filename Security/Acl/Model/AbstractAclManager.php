@@ -7,6 +7,7 @@ use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Acl\Voter\FieldVote;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
@@ -282,6 +283,18 @@ abstract class AbstractAclManager implements AclManagerInterface
         }
 
         return $this->getAuthorizationChecker()->isGranted($attributes, $object);
+    }
+
+    public function isGrantedUser($user, $object, $mask)
+    {
+        if (!is_int($mask)) {
+            $builder = new MaskBuilder;
+            $builder->add($mask);
+            $mask = $builder->get();
+        }
+
+        $oid = $this->createObjectIdentity($object);
+        return $this->getProvider()->userHasAclOnObject($user, $oid, $mask);
     }
 
     protected function revokePermissions($object, $identity)

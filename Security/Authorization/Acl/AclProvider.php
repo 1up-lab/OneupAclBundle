@@ -47,17 +47,10 @@ class AclProvider extends MutableAclProvider
         $type = null,
         $withRoles = false
     ) {
-        /** @var UserSecurityIdentity $securityIdentity */
-        $securityIdentity = $this->getSecurityEntity($identityObject);
-        if (!$securityIdentity) {
+        $identifier = $this->getSecurityIdentifier($identityObject);
+        if (!$identifier) {
             return null;
         }
-
-        $identifier = sprintf(
-            '%s-%s',
-            $securityIdentity->getClass(),
-            $securityIdentity->getUsername()
-        );
 
         if ($withRoles) {
             $identifiers = array($identifier);
@@ -92,6 +85,22 @@ class AclProvider extends MutableAclProvider
         }
 
         return $objectIdentities;
+    }
+
+    public function userHasAclOnObject(
+        $securityObject,
+        $objectIdentity,
+        $mask = MaskBuilder::MASK_VIEW
+    ) {
+        $identifier = $this->getSecurityIdentifier($securityObject);
+        if (!$identifier) {
+            return null;
+        }
+
+        $sql = $this->getQuery($identifier, $mask, $objectIdentity->getType(), $objectIdentity->getIdentifier());
+        $sql .= ' LIMIT 1';
+
+        return (bool) $this->connection->executeQuery($sql)->fetch();
     }
 
     /** Locates all objects that the specified Role has access to.
@@ -142,7 +151,7 @@ class AclProvider extends MutableAclProvider
         return $objectIdentities;
     }
 
-    private function getQuery($identifier, $mask, $type)
+    private function getQuery($identifier, $mask, $type, $objectIdentifier = null)
     {
         $sql = "SELECT
               o.object_identifier
@@ -175,6 +184,10 @@ class AclProvider extends MutableAclProvider
             $sql .= ' AND c.class_type = ' . $this->connection->quote($type);
         }
 
+        if ($objectIdentifier) {
+            $sql .= ' AND o.object_identifier = ' . $this->connection->quote($objectIdentifier);
+        }
+
         return $sql;
     }
 
@@ -196,5 +209,21 @@ class AclProvider extends MutableAclProvider
         }
 
         return null;
+    }
+
+    private function getSecurityIdentifier($identityObject)
+    {
+        /** @var UserSecurityIdentity $securityIdentity */
+        $securityIdentity = $this->getSecurityEntity($identityObject);
+
+        if (!$securityIdentity) {
+            return null;
+        }
+
+        return sprintf(
+            '%s-%s',
+            $securityIdentity->getClass(),
+            $securityIdentity->getUsername()
+        );
     }
 }

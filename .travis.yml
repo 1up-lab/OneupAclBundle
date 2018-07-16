@@ -1,5 +1,4 @@
 language: php
-sudo: false
 
 php:
     - 5.6
@@ -8,9 +7,12 @@ php:
     - 7.2
 
 env:
-  - SYMFONY_VERSION=^2.8
   - SYMFONY_VERSION=^3.0
   - SYMFONY_VERSION=^4.0
+
+cache:
+  directories:
+    - $COMPOSER_CACHE_DIR
 
 matrix:
   exclude:
@@ -19,9 +21,14 @@ matrix:
     - php: 7.0
       env: SYMFONY_VERSION=^4.0
 
+before_install:
+  - travis_retry composer selfupdate
+
 before_script:
-  - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update --prefer-source
-  - composer require symfony/http-kernel:${SYMFONY_VERSION} --no-update --prefer-source
-  - composer require symfony/security-bundle:${SYMFONY_VERSION} --no-update --prefer-source
-  - composer require symfony/security-acl:${SYMFONY_VERSION} --no-update --prefer-source
-  - composer install --dev --prefer-source
+  - travis_wait composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update --prefer-source
+  - travis_wait composer require symfony/http-kernel:${SYMFONY_VERSION} --no-update --prefer-source
+  - travis_wait composer require symfony/security-bundle:${SYMFONY_VERSION} --no-update --prefer-source
+  - travis_wait composer require symfony/security-acl:${SYMFONY_VERSION} --no-update --prefer-source
+  - travis_wait composer install --dev --prefer-source
+
+script: ./vendor/bin/phpunit

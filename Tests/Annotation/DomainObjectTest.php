@@ -4,8 +4,9 @@ namespace Oneup\AclBundle\Tests\Annotation;
 
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Oneup\AclBundle\Mapping\Annotation as Acl;
+use PHPUnit\Framework\TestCase;
 
-class DomainObjectTest extends \PHPUnit_Framework_TestCase
+class DomainObjectTest extends TestCase
 {
     public function testAutoloadDummy()
     {

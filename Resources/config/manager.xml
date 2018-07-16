@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="oneup_acl.manager" class="%oneup_acl.manager.class%">
+        <service id="oneup_acl.manager" class="%oneup_acl.manager.class%" public="true">
             <argument type="service" id="security.acl.provider" />
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="security.authorization_checker" />

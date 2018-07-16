@@ -1,8 +1,13 @@
 {
     "name": "oneup/acl-bundle",
     "type": "symfony-bundle",
+    "target-dir": "Oneup/AclBundle",
     "description": "The missing link between Symfony`s Acl implementation and your application.",
-    "keywords": ["symfony2", "acl", "security"],
+    "keywords": [
+        "Symfony",
+        "ACL",
+        "Security"
+    ],
     "homepage": "http://1up.io",
     "license": "MIT",
     "authors": [
@@ -19,33 +24,38 @@
             "role": "Developer"
         }
     ],
-
     "require": {
-        "symfony/framework-bundle": ">=2.2",
-        "symfony/security-bundle": ">=2.2",
-        "symfony/security-acl": "^3.0",
-        "symfony/expression-language": ">=2.4",
-        "doctrine/doctrine-bundle": "~1.2",
-        "doctrine/common": "~2.2",
-        "doctrine/dbal": "~2.2"
+        "php": "^7.0",
+        "doctrine/common": "^2.2",
+        "doctrine/dbal": "^2.2",
+        "doctrine/doctrine-bundle": "^1.2",
+        "symfony/acl-bundle": "^1.0",
+        "symfony/expression-language": "^3.4 || ^4.0",
+        "symfony/framework-bundle": "^3.4 || ^4.0",
+        "symfony/security-acl": "^2.7 || ^3.0",
+        "symfony/security-bundle": "^3.4 || ^4.0",
+        "symfony/templating": "^3.4 || ^4.0",
+        "symfony/translation": "^3.4 || ^4.0",
+        "symfony/yaml": "^3.4 || ^4.0"
     },
-
     "require-dev": {
-        "symfony/finder": ">=2.0.16,<2.4-dev",
-        "symfony/browser-kit": "2.*",
-        "sensio/framework-extra-bundle": "~2.2|~3.0",
-        "doctrine/orm": "~2.4",
-        "phpunit/phpunit": "3.7.*"
+        "doctrine/orm": "^2.4",
+        "phpunit/phpunit": "^6.5",
+        "sensio/framework-extra-bundle": "^3.4 || ^4.0",
+        "symfony/browser-kit": "^3.4 || ^4.0",
+        "symfony/finder": "^3.4 || ^4.0"
     },
-
     "suggest": {
-        "sensio/framework-extra-bundle": "Allows you to use controller annotations.",
-        "doctrine/orm": "Allows you to remove Acl entries automatically."
+        "doctrine/orm": "Allows you to remove Acl entries automatically.",
+        "sensio/framework-extra-bundle": "Allows you to use controller annotations."
     },
-
+    "config": {
+        "sort-packages": true
+    },
     "autoload": {
-        "psr-0": { "Oneup\\AclBundle": "" }
-    },
-
-    "target-dir": "Oneup/AclBundle"
+        "psr-0": {
+            "Oneup\\AclBundle": ""
+        },
+        "classmap": [ "Tests/App/AppKernel.php"]
+    }
 }

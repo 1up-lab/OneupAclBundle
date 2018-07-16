@@ -13,15 +13,15 @@ class OneupAclExtensionTest extends AbstractSecurityTest
 
     public function testIfOrphanRemovalParameterIsSet()
     {
-        $this->assertTrue(is_bool($this->container->getParameter('oneup_acl.remove_orphans')));
+        $this->assertTrue(is_bool(self::$container->getParameter('oneup_acl.remove_orphans')));
     }
 
     public function testIfPermissionStrategyParameterIsSet()
     {
         $this->assertTrue(
-            'any' == $this->container->getParameter('oneup_acl.permission_strategy') ||
-            'all' == $this->container->getParameter('oneup_acl.permission_strategy') ||
-            'equal' == $this->container->getParameter('oneup_acl.permission_strategy')
+            'any' == self::$container->getParameter('oneup_acl.permission_strategy') ||
+            'all' == self::$container->getParameter('oneup_acl.permission_strategy') ||
+            'equal' == self::$container->getParameter('oneup_acl.permission_strategy')
         );
     }
 }

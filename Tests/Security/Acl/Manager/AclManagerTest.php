@@ -29,7 +29,7 @@ class AclManagerTest extends AbstractSecurityTest
         $this->assertFalse($this->manager->isGranted('EDIT', $this->object1));
 
         // set token to admin token and try again
-        $this->container->get((Kernel::VERSION_ID < 20600 ? 'security.context' : 'security.token_storage'))->setToken($adminToken);
+        self::$container->get((Kernel::VERSION_ID < 20600 ? 'security.context' : 'security.token_storage'))->setToken($adminToken);
         $this->assertTrue($this->manager->isGranted('VIEW', $this->object1));
         $this->assertTrue($this->manager->isGranted('CREATE', $this->object1));
         $this->assertTrue($this->manager->isGranted('EDIT', $this->object1));

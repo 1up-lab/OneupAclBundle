@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="oneup_acl.doctrine_subscriber" class="Oneup\AclBundle\EventListener\DoctrineSubscriber">
+        <service id="oneup_acl.doctrine_subscriber" class="Oneup\AclBundle\EventListener\DoctrineSubscriber" public="true">
             <argument type="service" id="service_container" />
             <tag name="doctrine.event_subscriber" />
             <tag name="doctrine_mongodb.odm.event_subscriber" />

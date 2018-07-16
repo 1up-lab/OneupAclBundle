@@ -2,6 +2,7 @@
 
 namespace Oneup\AclBundle\Tests\Model;
 
+use Oneup\AclBundle\Security\Acl\Manager\AclManager;
 use Symfony\Component\Security\Acl\Dbal\Schema;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -11,7 +12,9 @@ use Symfony\Component\HttpKernel\Kernel;
 abstract class AbstractSecurityTest extends WebTestCase
 {
     protected $client;
-    protected $container;
+    protected static $container;
+
+    /** @var AclManager */
     protected $manager;
 
     protected $object1;
@@ -22,12 +25,12 @@ abstract class AbstractSecurityTest extends WebTestCase
     protected function setUp()
     {
         $this->client = static::createClient();
-        $this->container = $this->client->getContainer();
+        self::$container = $this->client->getContainer();
 
         $this->token = $this->createToken();
-        $this->container->get((Kernel::VERSION_ID < 20600 ? 'security.context' : 'security.token_storage'))->setToken($this->token);
+        self::$container->get((Kernel::VERSION_ID < 20600 ? 'security.context' : 'security.token_storage'))->setToken($this->token);
 
-        $this->connection = $this->container->get('database_connection');
+        $this->connection = self::$container->get('database_connection');
 
         if (!class_exists('PDO') || !in_array('sqlite', \PDO::getAvailableDrivers())) {
             $this->markTestSkipped('This test requires SQLite support in your environment.');
@@ -47,7 +50,7 @@ abstract class AbstractSecurityTest extends WebTestCase
             $this->connection->exec($sql);
         }
 
-        $this->manager = $this->container->get('oneup_acl.manager');
+        $this->manager = self::$container->get('oneup_acl.manager');
 
         $this->object1 = new SomeObject(1);
         $this->object2 = new SomeObject(2);
@@ -90,12 +93,12 @@ abstract class AbstractSecurityTest extends WebTestCase
     public function testIfContainerExists()
     {
         $this->assertNotNull($this->client);
-        $this->assertNotNull($this->container);
+        $this->assertNotNull(self::$container);
     }
 
     public function testIfSecurityContextLoads()
     {
-        $aclProvider = $this->container->get((Kernel::VERSION_ID < 20600 ? 'security.context' : 'security.authorization_checker'));
+        $aclProvider = self::$container->get((Kernel::VERSION_ID < 20600 ? 'security.context' : 'security.authorization_checker'));
         $this->assertTrue($aclProvider->isGranted('ROLE_USER'));
         $this->assertFalse($aclProvider->isGranted('ROLE_ADMIN'));
     }

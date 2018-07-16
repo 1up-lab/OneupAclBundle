@@ -3,7 +3,7 @@ framework:
     secret: secret
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
-        strict_requirements: %kernel.debug%
+        strict_requirements: "%kernel.debug%"
     templating:
         engines: ['php']
     default_locale: en
@@ -12,8 +12,6 @@ framework:
     trusted_hosts: ~
 
 security:
-    acl:
-        connection: default
     providers:
         in_memory:
             memory: ~
@@ -21,6 +19,9 @@ security:
         main:
             anonymous: true
             pattern: ^/
+
+acl:
+    connection: default
 
 doctrine:
     dbal:

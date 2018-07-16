@@ -26,7 +26,7 @@ class PermissionListenerTest extends AbstractSecurityTest
     }
 
     /**
-     * @expectedException Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @expectedException \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     public function testAccessDenied()
     {
@@ -92,7 +92,7 @@ class PermissionListenerTest extends AbstractSecurityTest
             ->will($this->returnValue($request))
         ;
 
-        $this->listener->onKernelController($event);
+        $this->assertNull($this->listener->onKernelController($event));
     }
 
     public function testMultiplePermissionInSingleAnnotation()
@@ -132,7 +132,7 @@ class PermissionListenerTest extends AbstractSecurityTest
             ->will($this->returnValue($request))
         ;
 
-        $this->listener->onKernelController($event);
+        $this->assertNull($this->listener->onKernelController($event));
     }
 
     public function testMultiplePermissionsInAnnotation()
@@ -170,6 +170,6 @@ class PermissionListenerTest extends AbstractSecurityTest
             ->will($this->returnValue($request))
         ;
 
-        $this->listener->onKernelController($event);
+        $this->assertNull($this->listener->onKernelController($event));
     }
 }

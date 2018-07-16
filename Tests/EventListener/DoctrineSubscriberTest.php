@@ -14,7 +14,7 @@ class DoctrineSubscriberTest extends AbstractSecurityTest
     {
         parent::setUp();
 
-        $this->listener = $this->container->get('oneup_acl.doctrine_subscriber');
+        $this->listener = self::$container->get('oneup_acl.doctrine_subscriber');
     }
 
     public function testPostPersistListener()

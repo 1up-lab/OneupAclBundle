@@ -9,7 +9,7 @@ use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Voter\FieldVote;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Util\ClassUtils;
 
@@ -459,7 +459,7 @@ abstract class AbstractAclManager implements AclManagerInterface
             $identity = UserSecurityIdentity::fromAccount($input);
         } elseif ($input instanceof TokenInterface) {
             $identity = UserSecurityIdentity::fromToken($input);
-        } elseif ($input instanceof RoleInterface) {
+        } elseif ($input instanceof Role) {
             $identity = new RoleSecurityIdentity($input->getRole());
         } elseif (is_string($input)) {
             $identity = new RoleSecurityIdentity($input);
